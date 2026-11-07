@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Safe delete · Knowledge Explorer</title>
+<!-- Static design mockup exported from the "Knowledge Explorer UX" canvas. See DESIGN.md for the rules. -->
+<style>
+body{margin:0;background:#FFFFFF;color:#37352F;font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#37352F}a:hover{color:#111111}
+.b{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:32px;padding:0 12px;border-radius:5px;border:0;background:transparent;color:#37352F;font:inherit;font-size:14px;cursor:pointer;text-decoration:none}
+.p{margin:0;font-size:16px;line-height:1.6;color:#37352F}
+.inked,.inked .p,.inked .h3,.inked .h4{color:#141413}
+article h2,article h3{color:#37352F}
+.r{display:flex;gap:10px;align-items:flex-start;padding:6px 8px;border-radius:5px;cursor:pointer;font-size:14px;line-height:1.45}
+.r:hover{background:#F7F7F5}
+.r input{margin:2px 0 0;width:16px;height:16px;accent-color:#37352F;flex:none}
+.lg{font-size:12px;font-weight:500;color:#73726E;padding:0 8px 4px}
+</style>
+</head>
+<body>
+<div style="min-height: 1000px; position: relative">
+  <main aria-hidden="true" style="padding: 96px 32px; box-sizing: border-box">
+    <article style="max-width: 708px; margin: 0 auto; display: flex; flex-direction: column; gap: 6px">
+      <h2 style="margin: 0; font-size: 24px; font-weight: 600">Ranking losses</h2>
+      <p class="p">How to learn a relative ordering of items for a query, rather than an absolute score for each item.</p>
+      <div style="margin: 10px -10px 0; padding: 6px 10px; border-radius: 5px; background: #FDEBEC">
+        <h3 style="margin: 0 0 4px; font-size: 20px; font-weight: 600">Pairwise loss</h3>
+        <p class="p">Optimizes preferences between pairs: for a query, the more relevant item should score above the less relevant one.</p>
+        <p class="p" style="padding-left: 18px; color: #73726E">RankNet loss · Margin ranking loss</p>
+      </div>
+      <h2 style="margin: 24px 0 0; font-size: 24px; font-weight: 600">Representation learning losses</h2>
+      <p class="p">How to shape an embedding space so that similar things land close together.</p>
+    </article>
+  </main>
+
+  <div style="position: absolute; inset: 0; background: rgba(15,15,15,0.4); display: flex; align-items: center; justify-content: center; padding: 24px; box-sizing: border-box">
+    <section role="dialog" aria-modal="true" aria-labelledby="dtitle" style="width: 100%; max-width: 460px; background: #FFFFFF; border-radius: 8px; box-shadow: rgba(15,15,15,0.05) 0 0 0 1px, rgba(15,15,15,0.1) 0 5px 10px, rgba(15,15,15,0.2) 0 15px 40px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
+      <div style="display: flex; flex-direction: column; gap: 6px; padding: 0 8px">
+        <h2 id="dtitle" style="margin: 0; font-size: 16px; font-weight: 600">Delete “Pairwise loss”?</h2>
+        <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #73726E">It has 2 blocks beneath it (1 inked) and 1 inked relation.</p>
+      </div>
+
+      <fieldset style="border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0">
+        <legend class="lg">Blocks beneath it</legend>
+        <label class="r"><input type="radio" name="c" checked><span>Move them up to “Ranking losses”</span></label>
+        <label class="r"><input type="radio" name="c"><span>Delete them too <span style="color: #73726E">· includes 1 inked</span></span></label>
+      </fieldset>
+
+      <fieldset style="border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0">
+        <legend class="lg">Relation with Contrastive learning</legend>
+        <label class="r"><input type="radio" name="l" checked><span>Keep its notes as a block under “Contrastive learning”</span></label>
+        <label class="r"><input type="radio" name="l"><span>Delete the relation</span></label>
+      </fieldset>
+
+      <div style="display: flex; flex-direction: column; gap: 6px; padding-top: 4px">
+        <button class="b" style="width: 100%; min-height: 34px; background: #C4362F; color: #FFFFFF; font-weight: 500">Delete</button>
+        <button class="b" style="width: 100%; min-height: 34px; box-shadow: rgba(15,15,15,0.12) 0 0 0 1px inset">Cancel</button>
+        <span style="font-size: 12px; color: #73726E; text-align: center; padding-top: 4px">You can undo for 10 seconds.</span>
+      </div>
+    </section>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Interaction spec · Knowledge Explorer</title>
+<!-- Static design mockup exported from the "Knowledge Explorer UX" canvas. See DESIGN.md for the rules. -->
+<style>
+body{margin:0;background:#FFFFFF;color:#37352F;font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#37352F}a:hover{color:#111111}
+svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.sec{display:flex;flex-direction:column;gap:14px;padding-top:24px;border-top:1px solid #EDEDEC}
+.n{font-size:12px;font-weight:500;color:#73726E}
+.h{margin:0;font-size:20px;font-weight:600}
+.t{margin:0;font-size:14px;line-height:1.6;color:#5F5E5B}
+.bt{margin:0;font-size:15px;font-weight:600}
+.bp{margin:0;font-size:14px;line-height:1.55}
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:12px;line-height:20px;padding:0 6px;border-radius:4px;align-self:flex-start}
+.b{display:inline-flex;align-items:center;gap:6px;min-height:28px;padding:0 8px;border-radius:5px;font-size:13px;color:#37352F}
+.k{font:500 12px ui-monospace,SFMono-Regular,Menlo,monospace;padding:1px 6px;border-radius:4px;background:#F1F1EF;color:#37352F;min-width:12px;text-align:center}
+.li{display:flex;gap:10px;align-items:baseline;font-size:14px;line-height:1.55}
+.menu{background:#FFFFFF;border-radius:6px;box-shadow:rgba(15,15,15,0.05) 0 0 0 1px,rgba(15,15,15,0.1) 0 3px 6px,rgba(15,15,15,0.12) 0 9px 24px}
+</style>
+</head>
+<body>
+<div style="width: 1440px; height: 1500px; box-sizing: border-box; padding: 80px 120px; display: flex; flex-direction: column; gap: 40px">
+  <header style="display: flex; flex-direction: column; gap: 10px">
+    <h1 style="margin: 0; font-size: 40px; font-weight: 700; letter-spacing: -0.01em">One block at a time</h1>
+    <p class="t" style="font-size: 16px; max-width: 760px">Interaction spec. Every action targets exactly one block. The page only shows what the user has seen; prepared-but-unseen content has no visual presence.</p>
+  </header>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 72px; row-gap: 40px">
+    <section class="sec">
+      <span class="n">01 · Lifecycle</span>
+      <h2 class="h">Drafts are marked; the page is not</h2>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px">
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <div style="background: #F3F6FC; padding: 10px 12px; border-radius: 6px; display: flex; flex-direction: column; gap: 6px"><p class="bt" style="color: #37352F">Temperature τ</p><p class="bp" style="color: #37352F">Rescales similarity scores before the softmax…</p></div>
+          <span class="n" style="margin-top: 8px">Explored · a temporary draft: tinted, with a ✓ to ink it</span>
+        </div>
+        <div style="position: relative; display: flex; flex-direction: column; gap: 6px; padding-left: 26px">
+         
+          <p class="bt" style="color: #141413">Formula</p><p class="bp" style="color: #141413">ℒ = −log( exp(s⁺/τ) / Σ exp(s/τ) )</p>
+          <span class="n" style="margin-top: 8px">Inked · the normal page: plain, no marker</span>
+        </div>
+      </div>
+      <p class="t">Inked is the norm: most of a mature page is inked, so inked blocks carry no marker at all. Explored blocks are temporary drafts and the only thing marked, by a faint blue tint and a ✓ at the right. Ticking ✓ lifts the block onto the plain page (~250 ms). Ink means “accepted into my page”, not “favorite”.</p>
+      <p class="t">Generated content never appears: no placeholders, ghost rows, “ready” dots or counts. Suggestions are phrased as questions and don't reveal whether an answer is prepared.</p>
+    </section>
+
+    <section class="sec">
+      <span class="n">02 · Block controls</span>
+      <h2 class="h">Quiet, except the ink check</h2>
+      <div style="display: flex; align-items: center; gap: 16px">
+        <span style="display: flex; color: #8F8E8A; gap: 4px" aria-hidden="true"><svg viewBox="0 0 24 24" style="width: 14px; height: 14px; fill: currentColor"><circle cx="9" cy="5" r="1.6"></circle><circle cx="9" cy="12" r="1.6"></circle><circle cx="9" cy="19" r="1.6"></circle><circle cx="15" cy="5" r="1.6"></circle><circle cx="15" cy="12" r="1.6"></circle><circle cx="15" cy="19" r="1.6"></circle></svg></span>
+        <div class="menu" style="display: flex; padding: 3px">
+          <span class="b">Relate</span><span class="b">Edit</span><span class="b">···</span>
+        </div>
+        <span style="display: inline-flex; color: #8F8E8A" aria-hidden="true"><svg class="i" viewBox="0 0 24 24" style="width: 18px; height: 18px"><circle cx="12" cy="12" r="10"></circle><path d="m8 12.5 2.5 2.5 5.5-5.5"></path></svg></span>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px"><span class="n" style="padding-right: 2px">Explore</span><span class="b" style="background: #F1F1EF">Why does a small τ favor hard negatives?</span><span class="b" style="background: #F1F1EF">Typical τ values</span><span class="b" style="background: #F1F1EF">+</span></div>
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <div class="li"><span class="k">↳</span><span>Subtopic row at the bottom of each block (on hover or focus): click a subtopic to explore it as one new child block; + names your own. The block menu has no Explore: the block itself is already explored by being visible.</span></div>
+        <div class="li"><span class="k">⋮⋮</span><span>Grip: drag to move; click for Move to, Ask for a new version, Delete. Moving an inked block under an explored parent offers to ink the new parent chain (“Always ink the new parent chain” skips the question); declining cancels the move. There is no un-ink: edit or delete instead.</span></div>
+        <div class="li"><span class="k">✓</span><span>Ink: a faint ✓ at the right of every explored block, always visible since inking is the normal next step. Inks this block only, under an inked parent (the root is always inked). If parents aren’t inked yet it offers “Ink the chain” in one step; “Always ink the whole chain” skips the question. Side links need both ends inked.</span></div>
+        <div class="li"><span class="k">R</span><span>Relate starts a side link from this block.</span></div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <span class="n">03 · Explore states</span>
+      <h2 class="h">The new block appears in place, alone</h2>
+      <div style="display: flex; flex-direction: column; gap: 16px">
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <span class="n">Writing…</span>
+          <span aria-hidden="true" style="height: 10px; width: 60%; border-radius: 4px; background: #F1F1EF"></span>
+          <span aria-hidden="true" style="height: 10px; width: 85%; border-radius: 4px; background: #F1F1EF"></span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 4px"><span style="display: flex; gap: 8px; align-items: center"><span class="bt">Temperature τ</span><span class="pill" style="background: #FBF3DB; color: #7A5A00">New</span></span><p class="bp">Rescales the similarity scores…</p></div>
+        <p class="bp" style="color: #A1271F">Couldn't add a block. Your page is unchanged. <a href="#" style="color: #A1271F">Try again</a></p>
+      </div>
+      <p class="t">A prepared answer just skips “Writing…”. “New” fades after 8 s or on scroll.</p>
+    </section>
+
+    <section class="sec">
+      <span class="n">04 · Edits are protected</span>
+      <h2 class="h">Replacement is always a choice</h2>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px">
+        <div style="display: flex; flex-direction: column; gap: 6px"><span class="pill" style="background: #F1F1EF; color: #5F5E5B">Yours · edited</span><p class="bp">BM25 sums, over query terms, an IDF weight times a saturating term-frequency factor, normalised by length.</p></div>
+        <div style="display: flex; flex-direction: column; gap: 6px"><span class="pill" style="background: #EDEDEC; color: #141413">New version</span><p class="bp" style="color: #5F5E5B">BM25 ranks documents by term matches, damping repeats (k₁) and adjusting for length (b)…</p></div>
+      </div>
+      <div style="display: flex; gap: 6px">
+        <span class="b" style="background: #37352F; color: #FFFFFF">Keep mine</span>
+        <span class="b" style="box-shadow: rgba(15,15,15,0.12) 0 0 0 1px inset">Use new</span>
+        <span class="b" style="box-shadow: rgba(15,15,15,0.12) 0 0 0 1px inset">Add as separate block</span>
+      </div>
+      <p class="t">Only via ⋮⋮ › Ask for a new version. User-changed blocks show a grey “Edited” tag.</p>
+    </section>
+
+    <section class="sec">
+      <span class="n">05 · Relate</span>
+      <h2 class="h">A side link is content, not a line</h2>
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <div class="li"><span class="k">1</span><span>Relate on “Pairwise loss”.</span></div>
+        <div class="li"><span class="k">2</span><span>Pick the other block from a searchable outline (visible blocks only).</span></div>
+        <div class="li"><span class="k">3</span><span>Ask “How are they different?” for one explanatory block, or write your own.</span></div>
+      </div>
+      <p class="t">Shown as an orange inline mention on both ends and a line in the right margin. Opens as a side peek with its own subtopics to explore, ✓ and Edit.</p>
+    </section>
+
+    <section class="sec">
+      <span class="n">06 · Safety &amp; access</span>
+      <h2 class="h">Calm by default</h2>
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <div class="li"><span class="k">·</span><span>Autosaves locally; reopening returns to the last block in view.</span></div>
+        <div class="li"><span class="k">·</span><span>Deleting a linked block lists the impact; relation notes are kept by default; 10 s undo.</span></div>
+        <div class="li"><span class="k">·</span><span>“Clean up” removes un-inked blocks after a preview. Inked blocks are never touched.</span></div>
+        <div class="li"><span class="k">·</span><span>Controls reachable by Tab on a focused block; ink state is announced as text, not colour alone.</span></div>
+      </div>
+    </section>
+  </div>
+</div>
+</body>
+</html>

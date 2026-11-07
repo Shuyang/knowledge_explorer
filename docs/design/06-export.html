@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Export · Knowledge Explorer</title>
+<!-- Static design mockup exported from the "Knowledge Explorer UX" canvas. See DESIGN.md for the rules. -->
+<style>
+body{margin:0;background:#FFFFFF;color:#37352F;font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#37352F}a:hover{color:#111111}
+.b{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:32px;padding:0 12px;border-radius:5px;border:0;background:transparent;color:#37352F;font:inherit;font-size:14px;cursor:pointer;text-decoration:none}
+.set{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:40px;font-size:14px}
+.sel{min-height:30px;padding:0 8px;border-radius:5px;border:0;background:#F1F1EF;font:inherit;font-size:14px;color:#37352F}
+.sw{display:flex;align-items:center;gap:10px;min-height:36px;font-size:14px;line-height:1.4;cursor:pointer}
+.sw input{width:16px;height:16px;margin:0;accent-color:#141413;flex:none}
+.md{margin:0;font:400 13px/1.7 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#37352F;white-space:pre-wrap}
+.dim{color:#73726E}
+</style>
+</head>
+<body>
+<div style="min-height: 1000px; background: rgba(15,15,15,0.4); display: flex; align-items: center; justify-content: center; padding: 40px 24px; box-sizing: border-box">
+  <section role="dialog" aria-modal="true" aria-labelledby="etitle" style="width: 100%; max-width: 920px; background: #FFFFFF; border-radius: 8px; box-shadow: rgba(15,15,15,0.05) 0 0 0 1px, rgba(15,15,15,0.1) 0 5px 10px, rgba(15,15,15,0.2) 0 15px 40px; display: flex; flex-wrap: wrap; overflow: hidden">
+    <div style="flex: 1 1 320px; max-width: 360px; padding: 20px 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 4px">
+      <h2 id="etitle" style="margin: 0 0 12px; font-size: 16px; font-weight: 600">Export</h2>
+      <div class="set"><label for="scope">Include</label><select id="scope" class="sel"><option selected="">Inked only</option><option>Whole topic</option></select></div>
+      <div class="set"><label for="fmt">Format</label><select id="fmt" class="sel"><option selected="">Markdown</option><option>JSON</option></select></div>
+      <div style="border-top: 1px solid #EDEDEC; margin: 10px 0 6px"></div>
+      <label class="sw"><input type="checkbox" checked="">Relations at the end</label>
+      <label class="sw"><input type="checkbox">Formulas as LaTeX</label>
+      <p style="margin: 12px 0 0; font-size: 12px; line-height: 1.5; color: #73726E">6 inked blocks and 1 relation. Made on this device; no internet needed. JSON keeps ids, hierarchy, relations and states for re-import.</p>
+      <div style="display: flex; gap: 6px; margin-top: auto; padding-top: 20px">
+        <button class="b" style="background: #141413; color: #FFFFFF; font-weight: 500">Export</button>
+        <button class="b" style="box-shadow: rgba(15,15,15,0.12) 0 0 0 1px inset">Copy</button>
+        <a href="03-growing-the-page.html" class="b" style="color: #73726E">Cancel</a>
+      </div>
+    </div>
+
+    <div style="flex: 999 1 400px; min-width: 0; background: #F7F7F5; padding: 20px 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px">
+      <span style="font-size: 12px; font-weight: 500; color: #73726E">Preview · ml-loss-functions.md</span>
+<pre class="md"><span style="font-weight: 600"># ML Loss Functions</span>
+<span class="dim">_Notes · 7 Nov 2026_</span>
+
+## Ranking losses
+### Pairwise loss
+Optimizes preferences between pairs: the more
+relevant item should score above the less relevant one.
+
+## Representation learning losses
+### Contrastive learning
+#### InfoNCE
+
+<span style="font-weight: 600">##### Formula</span>
+L_i = −log( exp(sim(q_i, k_i⁺)/τ)
+           / Σ_j exp(sim(q_i, k_j)/τ) )
+
+q_i is the query embedding, k_i⁺ its positive key…
+
+---
+
+<span style="font-weight: 600">## Related concepts</span>
+
+<span style="font-weight: 600">### Pairwise loss ↔ Contrastive learning</span>
+<span class="dim">_Connects [Pairwise loss](#pairwise-loss) and</span>
+<span class="dim">[Contrastive learning](#contrastive-learning)_</span>
+
+Pairwise ranking losses typically express that one
+candidate should score above another for a query…</pre>
+      <span style="font-size: 12px; color: #73726E; margin-top: auto">Inked blocks always sit under inked parents, so the notes read as a complete outline.</span>
+    </div>
+  </section>
+</div>
+</body>
+</html>

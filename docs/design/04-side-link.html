@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Side link opened · Knowledge Explorer</title>
+<!-- Static design mockup exported from the "Knowledge Explorer UX" canvas. See DESIGN.md for the rules. -->
+<style>
+body{margin:0;background:#FFFFFF;color:#37352F;font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#37352F}a:hover{color:#111111}
+svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.b{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:32px;padding:0 10px;border-radius:5px;border:0;background:transparent;color:#37352F;font:inherit;font-size:14px;cursor:pointer;text-decoration:none}
+.b:hover{background:#EFEFED}
+.p{margin:0;font-size:16px;line-height:1.6;color:#37352F}
+.inked,.inked .p,.inked .h3,.inked .h4{color:#141413}
+article h2,article h3,aside h2{color:#37352F}
+.prop{display:flex;align-items:flex-start;gap:8px;min-height:34px;font-size:14px}
+.pk{flex:0 0 120px;display:flex;align-items:center;gap:6px;color:#73726E;min-height:34px}
+.pv{flex:1;display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:34px}
+.ment{display:inline-flex;align-items:center;gap:4px;font-size:14px;color:#37352F;text-decoration:none;border-bottom:1px solid #D3D1CB;line-height:1.5}
+.ment:hover{border-bottom-color:#37352F}
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:13px;line-height:22px;padding:0 7px;border-radius:4px;border:0;font-family:inherit;cursor:pointer}
+.mi{display:inline-flex;align-items:center;min-height:30px;padding:0 10px;border-radius:5px;border:0;background:#F1F1EF;font:inherit;font-size:13px;color:#37352F;cursor:pointer}
+.mi:hover{background:#E8E8E6}
+.end{position:relative;padding:6px 10px;margin:0 -10px;border-radius:5px;background:#FBF3EC}
+</style>
+</head>
+<body>
+<div style="min-height: 1120px; display: flex; flex-wrap: wrap">
+  <main style="flex: 999 1 560px; min-width: 0; padding: 72px 32px 80px; box-sizing: border-box; background: #FFFFFF">
+    <article style="max-width: 640px; margin: 0 auto; display: flex; flex-direction: column; gap: 6px; padding: 28px 32px 32px">
+      <h2 style="margin: 0; font-size: 24px; font-weight: 600; display: flex; align-items: center; gap: 8px">Ranking losses</h2>
+      <p class="p">How to learn a relative ordering of items for a query, rather than an absolute score for each item.</p>
+      <div class="end" style="margin-top: 10px; background: transparent; box-shadow: inset 0 0 0 1.5px #E3A878; border-radius: 6px">
+        <h3 style="margin: 0 0 4px; font-size: 20px; font-weight: 600; display: flex; align-items: center; gap: 8px"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px; flex: none" fill="none" stroke="#93490F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 4 7l4 4"></path><path d="M4 7h16"></path><path d="m16 21 4-4-4-4"></path><path d="M20 17H4"></path></svg>Pairwise loss</h3>
+        <p class="p">Optimizes preferences between pairs: for a query, the more relevant item should score above the less relevant one by some margin.</p>
+      </div>
+
+      <p style="margin: 28px 0; font-size: 13px; color: #9B9A97; text-align: center">· · ·</p>
+
+      <h2 style="margin: 0; font-size: 24px; font-weight: 600; display: flex; align-items: center; gap: 8px">Representation learning losses</h2>
+      <p class="p">How to shape an embedding space so that similar things land close together and dissimilar things land far apart.</p>
+      <div class="end" style="margin-top: 10px; background: transparent; box-shadow: inset 0 0 0 1.5px #E3A878; border-radius: 6px">
+        <h3 style="margin: 0 0 4px; font-size: 20px; font-weight: 600; display: flex; align-items: center; gap: 8px"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px; flex: none" fill="none" stroke="#93490F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 4 7l4 4"></path><path d="M4 7h16"></path><path d="m16 21 4-4-4-4"></path><path d="M20 17H4"></path></svg>Contrastive learning</h3>
+        <p class="p">Pulls positive examples closer together in representation space and pushes negatives apart, so distance comes to mean dissimilarity.</p>
+      </div>
+      <p style="margin: 16px 0 0; font-size: 13px; color: #73726E">Outlined in orange with the relation mark: the two ends of this relation. Both ends are inked (part of the page), which is what allows the relation itself to be inked.</p>
+    </article>
+  </main>
+
+  <aside aria-label="Relation" style="flex: 1 1 420px; max-width: 560px; background: #FFFFFF; box-shadow: rgba(15,15,15,0.06) -1px 0 0, rgba(15,15,15,0.08) -12px 0 32px; box-sizing: border-box; display: flex; flex-direction: column">
+    <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px">
+      <div style="display: flex; gap: 2px">
+        <a href="03-growing-the-page.html" class="b" aria-label="Close" style="padding: 0 6px; color: #73726E"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m13 17 5-5-5-5"></path><path d="m6 17 5-5-5-5"></path></svg></a>
+      </div>
+      <div style="display: flex; gap: 2px">
+        <button class="b" style="color: #73726E; font-size: 13px">Change ends</button>
+        <button class="b" aria-label="More"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button>
+      </div>
+    </div>
+
+    <div style="padding: 28px 44px 40px; display: flex; flex-direction: column; gap: 14px">
+      <svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width: 32px; height: 32px; color: #93490F; stroke-width: 1.4"><path d="M8 3 4 7l4 4"></path><path d="M4 7h16"></path><path d="m16 21 4-4-4-4"></path><path d="M20 17H4"></path></svg>
+      <h1 style="margin: 0; font-size: 30px; font-weight: 700; line-height: 1.25">How are they actually different?</h1>
+
+      <div style="display: flex; flex-direction: column; padding-bottom: 12px; border-bottom: 1px solid #EDEDEC">
+        <div class="prop"><span class="pk"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width: 14px; height: 14px"><path d="M9 17H7A5 5 0 0 1 7 7h2"></path><path d="M15 7h2a5 5 0 1 1 0 10h-2"></path><path d="M8 12h8"></path></svg>Connects</span><span class="pv"><a href="#" class="ment">Pairwise loss</a><span style="color: #9B9A97">↔</span><a href="#" class="ment">Contrastive learning</a></span></div>
+        <div class="prop"><span class="pk"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width: 14px; height: 14px"><circle cx="12" cy="12" r="10"></circle><path d="m8 12.5 2.5 2.5 5.5-5.5"></path></svg>Notes</span><span class="pv"><button class="pill" aria-pressed="true" style="background: #EDEDEC; color: #141413">Inked</button><span style="font-size: 12px; color: #73726E">both ends inked</span></span></div>
+      </div>
+
+      <p class="p" style="color: #141413">Pairwise ranking losses typically express that one candidate should score above another for a query, while contrastive objectives shape an embedding space by distinguishing positive pairs from negative candidates. They can overlap mathematically: the distinction depends on the learning setup, scoring function and negative sampling, not just the word “pairwise.”</p>
+
+      <div style="position: relative; margin-top: 8px; display: flex; flex-direction: column; gap: 4px; background: #F3F6FC; padding: 12px 14px; border-radius: 6px">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
+          <h2 style="margin: 0; font-size: 18px; font-weight: 600">Training-example setup</h2>
+          <button class="b" aria-pressed="false" aria-label="Ink this block" style="min-height: 28px; width: 28px; padding: 0; border-radius: 50%; color: #8F8E8A"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width: 14px; height: 14px"><circle cx="12" cy="12" r="10"></circle><path d="m8 12.5 2.5 2.5 5.5-5.5"></path></svg></button>
+        </div>
+        <p class="p">A typical ranking triplet has a query, a preferred and a less-preferred candidate. Contrastive training often compares one positive against many negatives at once.</p>
+      </div>
+
+      <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px">
+        <div role="group" aria-label="Subtopics to explore under this relation" style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px"><span style="font-size: 13px; color: #73726E; padding-right: 2px">Explore</span>
+          <button class="mi">When do they become the same objective?</button>
+          <button class="mi">Role of negative sampling</button>
+          <button class="mi">A worked example</button>
+          <button class="mi" aria-label="Name your own subtopic" style="padding: 0 8px"><svg class="i" style="width: 14px; height: 14px" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></button>
+        </div>
+      </div>
+    </div>
+  </aside>
+</div>
+</body>
+</html>
