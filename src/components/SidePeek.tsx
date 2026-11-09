@@ -1,6 +1,6 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Close, Check, LinkIco, Rel } from "../icons.tsx";
-import { Body, BlockView, DocViewCtx, PendingRow, SubtopicRow } from "./Block.tsx";
+import { Body, BlockView, DocViewCtx, PendingRow, SubtopicRow, editOnClick } from "./Block.tsx";
 import { Editor } from "./Editor.tsx";
 
 /** A side link opens here, never inline, so the page's narrative stays intact. */
@@ -8,6 +8,7 @@ export function SidePeek({ linkId, onClose, onDelete, onGoto }: { linkId: string
   const view = useContext(DocViewCtx);
   const { doc, editingId, actions, newIds, hideExplored } = view;
   const l = doc.links[linkId];
+  const [editFocus, setEditFocus] = useState<"title" | "body">("body");
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -36,11 +37,6 @@ export function SidePeek({ linkId, onClose, onDelete, onGoto }: { linkId: string
         </button>
         <div style={{ display: "flex", gap: 2 }}>
           {!editing && (
-            <button className="b sm" onClick={() => actions.startEdit(linkId)}>
-              Edit
-            </button>
-          )}
-          {!editing && (
             <button className="b sm" onClick={() => actions.requestNewVersion(linkId)}>
               New version
             </button>
@@ -53,9 +49,15 @@ export function SidePeek({ linkId, onClose, onDelete, onGoto }: { linkId: string
       <div className="peek-body">
         <Rel className="peek-icon" style={{ width: 32, height: 32 }} />
         {editing ? (
-          <Editor initial={{ title: l.title, body: l.body }} onSave={(p) => actions.saveEdit(linkId, p)} onCancel={actions.cancelEdit} />
+          <Editor initial={{ title: l.title, body: l.body }} focus={editFocus} onSave={(p) => actions.saveEdit(linkId, p)} onCancel={actions.cancelEdit} />
         ) : (
-          <h1 style={{ margin: 0, fontSize: 30, fontWeight: 700, lineHeight: 1.25, color: explored ? "#37352F" : "#141413", display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+          <h1
+            className="editable"
+            onClick={editOnClick(() => {
+              setEditFocus("title");
+              actions.startEdit(linkId);
+            })}
+            style={{ margin: 0, fontSize: 30, fontWeight: 700, lineHeight: 1.25, color: explored ? "#37352F" : "#141413", display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
             {l.title || "Relation"}
             {newIds.has(linkId) && <span className="pill new">New</span>}
             {l.edited && <span className="pill edited">Edited</span>}
@@ -85,7 +87,7 @@ export function SidePeek({ linkId, onClose, onDelete, onGoto }: { linkId: string
             <span className="v">
               {explored ? (
                 <>
-                  <span className="pill draft">Explored</span>
+                  <span className="pill draft">Draft</span>
                   <button className="b sm outline" onClick={() => actions.requestInk(linkId)} aria-label="Ink this relation">
                     <Check style={{ width: 14, height: 14 }} /> Ink
                   </button>
@@ -105,8 +107,14 @@ export function SidePeek({ linkId, onClose, onDelete, onGoto }: { linkId: string
         {!editing && (
           <div className={explored ? "block explored" : "block inked"} style={explored ? { margin: 0 } : undefined}>
             <div className="self">
-              <Body text={l.body} />
-              <SubtopicRow containerId={linkId} title={l.title} show />
+              <Body
+                text={l.body}
+                onClick={editOnClick(() => {
+                  setEditFocus("body");
+                  actions.startEdit(linkId);
+                })}
+              />
+              <SubtopicRow containerId={linkId} title={l.title} />
             </div>
           </div>
         )}
@@ -117,7 +125,7 @@ export function SidePeek({ linkId, onClose, onDelete, onGoto }: { linkId: string
           <PendingRow containerId={linkId} />
         </div>
         {hideExplored && l.childIds.some((c) => doc.blocks[c]?.lifecycle === "explored") && (
-          <p style={{ fontSize: 13, color: "#73726E" }}>Some explored blocks are hidden.</p>
+          <p style={{ fontSize: 13, color: "#73726E" }}>Some drafts are hidden.</p>
         )}
       </div>
     </aside>

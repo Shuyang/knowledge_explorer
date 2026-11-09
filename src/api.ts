@@ -14,6 +14,8 @@ export interface Settings {
   alwaysInkMoveChain?: boolean;
   tipDismissed?: boolean;
   hideExplored?: boolean;
+  /** Sidebar width in px, set by dragging its right edge. */
+  sidebarWidth?: number;
 }
 
 export class ApiError extends Error {}

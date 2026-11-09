@@ -31,7 +31,7 @@ For development with hot reload, run `npm run dev` and open http://localhost:517
 
 ## How it works
 
-- **Lifecycle:** *Generated → Explored → Inked.* Generated content lives only in the server-side cache (`data/cache/`), never in a document, so it can't appear in the UI, in counts, or overwrite anything. Showing a cached block moves it into the document as Explored. Inking is explicit and per block.
+- **Lifecycle:** *Generated → Draft → Inked.* Generated content lives only in the server-side cache (`data/cache/`), never in a document, so it can't appear in the UI, in counts, or overwrite anything. Showing a cached block moves it into the document as Draft. Inking is explicit and per block.
 - **Ink order:** A block can be inked only under an inked parent, and a side link only when both ends are inked. If something in the chain is missing, the app asks "Ink the chain?" (with an "Always" option). Moving an inked block under a draft parent asks the same question, and the move is cancelled if you decline. There is no un-ink.
 - **Explore:** Each click on a suggested subtopic, or on `+` to name your own, adds exactly one block. The server checks the cache first and calls the model only on a miss. After every new block it prepares 1–2 of that block's suggested children in the background.
 - **Side links:** Use *Relate* on a block, pick the other block, then either ask a question or write your own notes. A relation has its own body, children, subtopics and lifecycle. It opens in a side peek and is listed in the right margin.

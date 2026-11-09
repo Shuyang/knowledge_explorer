@@ -1,5 +1,4 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Body } from "./Block.tsx";
 
 const MAX_IMAGE = 8 * 1024 * 1024;
 
@@ -12,35 +11,44 @@ function readAsDataURL(f: File): Promise<string> {
   });
 }
 
-/** Inline editor for one block: title + Markdown body (with $math$ and images). */
+/**
+ * In-place editor for one block: title + Markdown body (with $math$ and images). No buttons:
+ * it saves when focus leaves it (or on ⌘↵) and Esc cancels. Paste or drop an image to insert it.
+ */
 export function Editor({
   initial,
   onSave,
   onCancel,
   titleLabel = "Title",
+  focus = "body",
 }: {
   initial: { title: string; body: string };
-  onSave: (v: { title: string; body: string }) => void;
+  onSave: (v: { title: string; body: string }) => boolean | void;
   onCancel: () => void;
   titleLabel?: string;
+  focus?: "title" | "body";
 }) {
   const [title, setTitle] = useState(initial.title);
   const [body, setBody] = useState(initial.body);
-  const [preview, setPreview] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const ta = useRef<HTMLTextAreaElement>(null);
-  const fileRef = useRef<HTMLInputElement>(null);
+  const ti = useRef<HTMLInputElement>(null);
+  const done = useRef(false);
 
   useLayoutEffect(() => {
     const el = ta.current;
     if (!el) return;
     el.style.height = "auto";
-    el.style.height = `${Math.min(el.scrollHeight + 2, 520)}px`;
-  }, [body, preview]);
+    el.style.height = `${el.scrollHeight + 2}px`;
+  }, [body]);
 
   useEffect(() => {
-    ta.current?.focus();
-  }, []);
+    const el = focus === "title" ? ti.current : ta.current;
+    if (!el) return;
+    el.focus();
+    const end = el.value.length;
+    el.setSelectionRange(end, end);
+  }, [focus]);
 
   const insert = (text: string) => {
     const el = ta.current;
@@ -57,86 +65,78 @@ export function Editor({
     insert(`\n\n![${f.name.replace(/[[\]]/g, "")}](${url})\n\n`);
   };
 
-  const save = () => {
-    if (!title.trim()) return setErr("A block needs a title");
-    onSave({ title, body });
+  const finish = (save: boolean) => {
+    if (done.current) return;
+    done.current = true;
+    // An empty title keeps the old one rather than blocking the user from leaving.
+    if (!save) return onCancel();
+    if (onSave({ title: title.trim() ? title : initial.title, body }) === false) done.current = false;
   };
 
   return (
     <div
       className="editor"
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) finish(true);
+      }}
       onKeyDown={(e) => {
         if (e.key === "Escape") {
           e.stopPropagation();
-          onCancel();
+          finish(false);
         }
         if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
           e.preventDefault();
-          save();
+          finish(true);
         }
       }}
     >
       <label className="sr-only" htmlFor="ed-title">
         {titleLabel}
       </label>
-      <input id="ed-title" className="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder={titleLabel} maxLength={200} />
+      <input
+        id="ed-title"
+        ref={ti}
+        className="title ttl"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.metaKey && !e.ctrlKey) {
+            e.preventDefault();
+            ta.current?.focus();
+          }
+        }}
+        placeholder={titleLabel}
+        maxLength={200}
+      />
       <label className="sr-only" htmlFor="ed-body">
         Text
       </label>
-      {preview ? (
-        <div className="preview">
-          <Body text={body || "_Nothing yet_"} />
-        </div>
-      ) : (
-        <textarea
-          id="ed-body"
-          ref={ta}
-          value={body}
-          onChange={(e) => setBody(e.target.value)}
-          placeholder="Write a paragraph, a formula ($$ … $$) or add an image"
-          onPaste={(e) => {
-            const f = [...e.clipboardData.files].find((x) => x.type.startsWith("image/"));
-            if (f) {
-              e.preventDefault();
-              void addImage(f);
-            }
-          }}
-          onDrop={(e) => {
-            const f = [...e.dataTransfer.files].find((x) => x.type.startsWith("image/"));
-            if (f) {
-              e.preventDefault();
-              void addImage(f);
-            }
-          }}
-        />
-      )}
+      <textarea
+        id="ed-body"
+        ref={ta}
+        rows={2}
+        value={body}
+        onChange={(e) => setBody(e.target.value)}
+        placeholder="Write a paragraph, a formula ($$ … $$), or paste an image"
+        onPaste={(e) => {
+          const f = [...e.clipboardData.files].find((x) => x.type.startsWith("image/"));
+          if (f) {
+            e.preventDefault();
+            void addImage(f);
+          }
+        }}
+        onDrop={(e) => {
+          const f = [...e.dataTransfer.files].find((x) => x.type.startsWith("image/"));
+          if (f) {
+            e.preventDefault();
+            void addImage(f);
+          }
+        }}
+      />
       {err && <p className="err">{err}</p>}
-      <div className="row">
-        <span className="hint">Markdown · $inline$ and $$display$$ math · ⌘↵ to save</span>
-        <button className="b sm" onClick={() => fileRef.current?.click()}>
-          Add image
-        </button>
-        <input
-          ref={fileRef}
-          type="file"
-          accept="image/*"
-          hidden
-          onChange={(e) => {
-            const f = e.target.files?.[0];
-            if (f) void addImage(f);
-            e.target.value = "";
-          }}
-        />
-        <button className="b sm" onClick={() => setPreview((p) => !p)} aria-pressed={preview}>
-          {preview ? "Write" : "Preview"}
-        </button>
-        <button className="b sm outline" onClick={onCancel}>
-          Cancel
-        </button>
-        <button className="b sm primary" onClick={save}>
-          Save
-        </button>
-      </div>
+      <span className="hint" aria-hidden="true">
+        Markdown · $math$ · paste or drop images · click outside to save · Esc to cancel
+      </span>
     </div>
   );
 }

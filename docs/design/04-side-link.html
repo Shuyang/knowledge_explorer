@@ -23,25 +23,26 @@ article h2,article h3,aside h2{color:#37352F}
 .mi{display:inline-flex;align-items:center;min-height:30px;padding:0 10px;border-radius:5px;border:0;background:#F1F1EF;font:inherit;font-size:13px;color:#37352F;cursor:pointer}
 .mi:hover{background:#E8E8E6}
 .end{position:relative;padding:6px 10px;margin:0 -10px;border-radius:5px;background:#FBF3EC}
+.fl{width:max-content;max-width:100%;padding:4px;gap:2px!important;border-radius:10px;background:#FFFFFF;box-shadow:rgba(15,15,15,0.05) 0 0 0 1px,rgba(15,15,15,0.1) 0 3px 6px,rgba(15,15,15,0.12) 0 9px 24px}.fl button{box-shadow:none!important;background:transparent!important;border:0!important;border-radius:6px!important;color:#5F5E5B!important;padding:0 9px!important;min-height:28px;font-size:13px!important}.fl>span{font-size:12px!important;font-weight:500;padding:0 6px 0 8px!important}
 </style>
 </head>
 <body>
 <div style="min-height: 1120px; display: flex; flex-wrap: wrap">
   <main style="flex: 999 1 560px; min-width: 0; padding: 72px 32px 80px; box-sizing: border-box; background: #FFFFFF">
     <article style="max-width: 640px; margin: 0 auto; display: flex; flex-direction: column; gap: 6px; padding: 28px 32px 32px">
-      <h2 style="margin: 0; font-size: 24px; font-weight: 600; display: flex; align-items: center; gap: 8px">Ranking losses</h2>
+      <h2 style="margin: 0; font-size: 24px; font-weight: 600; display: flex; align-items: center; gap: 8px"><span style="color: #8F8E8A; font-weight: 500; margin-right: 0.45em">3</span>Ranking losses</h2>
       <p class="p">How to learn a relative ordering of items for a query, rather than an absolute score for each item.</p>
       <div class="end" style="margin-top: 10px; background: transparent; box-shadow: inset 0 0 0 1.5px #E3A878; border-radius: 6px">
-        <h3 style="margin: 0 0 4px; font-size: 20px; font-weight: 600; display: flex; align-items: center; gap: 8px"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px; flex: none" fill="none" stroke="#93490F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 4 7l4 4"></path><path d="M4 7h16"></path><path d="m16 21 4-4-4-4"></path><path d="M20 17H4"></path></svg>Pairwise loss</h3>
+        <h3 style="margin: 0 0 4px; font-size: 20px; font-weight: 600; display: flex; align-items: center; gap: 8px"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px; flex: none" fill="none" stroke="#93490F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 4 7l4 4"></path><path d="M4 7h16"></path><path d="m16 21 4-4-4-4"></path><path d="M20 17H4"></path></svg><span style="color: #8F8E8A; font-weight: 500; margin-right: 0.45em">3.1</span>Pairwise loss</h3>
         <p class="p">Optimizes preferences between pairs: for a query, the more relevant item should score above the less relevant one by some margin.</p>
       </div>
 
       <p style="margin: 28px 0; font-size: 13px; color: #9B9A97; text-align: center">· · ·</p>
 
-      <h2 style="margin: 0; font-size: 24px; font-weight: 600; display: flex; align-items: center; gap: 8px">Representation learning losses</h2>
+      <h2 style="margin: 0; font-size: 24px; font-weight: 600; display: flex; align-items: center; gap: 8px"><span style="color: #8F8E8A; font-weight: 500; margin-right: 0.45em">4</span>Representation learning losses</h2>
       <p class="p">How to shape an embedding space so that similar things land close together and dissimilar things land far apart.</p>
       <div class="end" style="margin-top: 10px; background: transparent; box-shadow: inset 0 0 0 1.5px #E3A878; border-radius: 6px">
-        <h3 style="margin: 0 0 4px; font-size: 20px; font-weight: 600; display: flex; align-items: center; gap: 8px"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px; flex: none" fill="none" stroke="#93490F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 4 7l4 4"></path><path d="M4 7h16"></path><path d="m16 21 4-4-4-4"></path><path d="M20 17H4"></path></svg>Contrastive learning</h3>
+        <h3 style="margin: 0 0 4px; font-size: 20px; font-weight: 600; display: flex; align-items: center; gap: 8px"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px; flex: none" fill="none" stroke="#93490F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 4 7l4 4"></path><path d="M4 7h16"></path><path d="m16 21 4-4-4-4"></path><path d="M20 17H4"></path></svg><span style="color: #8F8E8A; font-weight: 500; margin-right: 0.45em">4.1</span>Contrastive learning</h3>
         <p class="p">Pulls positive examples closer together in representation space and pushes negatives apart, so distance comes to mean dissimilarity.</p>
       </div>
       <p style="margin: 16px 0 0; font-size: 13px; color: #73726E">Outlined in orange with the relation mark: the two ends of this relation. Both ends are inked (part of the page), which is what allows the relation itself to be inked.</p>
@@ -79,7 +80,7 @@ article h2,article h3,aside h2{color:#37352F}
       </div>
 
       <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px">
-        <div role="group" aria-label="Subtopics to explore under this relation" style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px"><span style="font-size: 13px; color: #73726E; padding-right: 2px">Explore</span>
+        <div class="fl" role="group" aria-label="Subtopics to explore under this relation" style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px"><span style="font-size: 13px; color: #73726E; padding-right: 2px">Explore</span>
           <button class="mi">When do they become the same objective?</button>
           <button class="mi">Role of negative sampling</button>
           <button class="mi">A worked example</button>

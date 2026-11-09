@@ -5,7 +5,7 @@
  */
 import { z } from "zod";
 import { type Block, type Doc, type SideLink, SCHEMA_VERSION, docTitle, newId, nowIso } from "./model.ts";
-import { treeOrder, validate } from "./ops.ts";
+import { outlineNumbers, treeOrder, validate } from "./ops.ts";
 
 export type ExportScope = "inked" | "all";
 
@@ -153,11 +153,19 @@ export function toMarkdown(doc: Doc, opts: MarkdownOptions, now = new Date()): s
     (l) => included(opts.scope, l) && l.endpoints.every((e) => doc.blocks[e] && included(opts.scope, doc.blocks[e])),
   );
   const linkTitle = (l: SideLink) => l.endpoints.map((e) => doc.blocks[e].title).join(" ↔ ");
+  // Same outline numbers as the page, counting only the blocks this export includes.
+  const nums = outlineNumbers(doc, (b) => included(opts.scope, b));
+  const heading = (id: string) => {
+    const b = doc.blocks[id];
+    const n = nums.get(id);
+    return n ? `${n} ${b.title}` : b.title;
+  };
 
   const writeLink = (l: SideLink, level: number) => {
     out.push(h(level, linkTitle(l)) + draftMark(l), "");
     const [a, b] = l.endpoints.map((e) => doc.blocks[e].title);
-    out.push(`_Connects [${a}](#${slug(a)}) and [${b}](#${slug(b)})_`, "");
+    const [ha, hb] = l.endpoints.map(heading);
+    out.push(`_Connects [${a}](#${slug(ha)}) and [${b}](#${slug(hb)})_`, "");
     if (l.title && l.title !== linkTitle(l)) out.push(`**${l.title}**`, "");
     if (l.body) out.push(mathOut(l.body, opts.latex), "");
     for (const ch of l.childIds) writeBlock(ch, level + 1);
@@ -167,7 +175,7 @@ export function toMarkdown(doc: Doc, opts: MarkdownOptions, now = new Date()): s
   const writeBlock = (id: string, level: number) => {
     const b = doc.blocks[id];
     if (!b || !included(opts.scope, b)) return;
-    out.push(h(level, b.title) + draftMark(b), "");
+    out.push(h(level, heading(id)) + draftMark(b), "");
     if (b.body) out.push(mathOut(b.body, opts.latex), "");
     for (const ch of b.childIds) writeBlock(ch, level + 1);
     if (!opts.relationsAtEnd) {

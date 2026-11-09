@@ -18,7 +18,8 @@ export interface DocActions {
   requestInk(id: string): void;
   startEdit(id: string): void;
   cancelEdit(): void;
-  saveEdit(id: string, patch: { title: string; body: string }): void;
+  /** Returns false when the edit was rejected, so the editor stays open. */
+  saveEdit(id: string, patch: { title: string; body: string }): boolean;
   relate(id: string): void;
   openLink(linkId: string): void;
   requestDelete(id: string): void;
@@ -35,7 +36,6 @@ export interface DocView {
   editingId: string | null;
   pending: Record<string, Pending>;
   newIds: Set<string>;
-  latestId: string | null;
   highlight: Set<string>;
   flashId: string | null;
   actions: DocActions;
@@ -46,22 +46,32 @@ const useView = () => useContext(DocViewCtx);
 
 let dragId: string | null = null;
 
-export function Body({ text }: { text: string }) {
+export function Body({ text, onClick }: { text: string; onClick?: (e: React.MouseEvent) => void }) {
   if (!text) return null;
-  return <div className="body" dangerouslySetInnerHTML={{ __html: renderMarkdown(text) }} />;
+  return <div className={`body${onClick ? " editable" : ""}`} onClick={onClick} dangerouslySetInnerHTML={{ __html: renderMarkdown(text) }} />;
 }
 
-function Heading({ depth, children, id }: { depth: number; children: React.ReactNode; id: string }) {
+/** Click on a title or body to edit it in place — but not when following a link or selecting text. */
+export function editOnClick(start: () => void) {
+  return (e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest("a, button, input, textarea")) return;
+    if (window.getSelection()?.toString()) return;
+    start();
+  };
+}
+
+function Heading({ depth, children, id, num, onClick }: { depth: number; children: React.ReactNode; id: string; num?: string; onClick?: (e: React.MouseEvent) => void }) {
   const level = Math.min(6, depth + 1);
   const Tag = `h${level}` as "h1";
   return (
-    <Tag className="ttl" id={`h-${id}`}>
+    <Tag className="ttl editable" id={`h-${id}`} onClick={onClick}>
+      {num && <span className="num">{num}</span>}
       {children}
     </Tag>
   );
 }
 
-export function SubtopicRow({ containerId, title, show }: { containerId: string; title: string; show: boolean }) {
+export function SubtopicRow({ containerId, title }: { containerId: string; title: string }) {
   const { doc, pending, actions } = useView();
   const c = doc.blocks[containerId] ?? doc.links[containerId];
   const [adding, setAdding] = useState(false);
@@ -75,7 +85,7 @@ export function SubtopicRow({ containerId, title, show }: { containerId: string;
     setAdding(false);
   };
   return (
-    <div className={`subrow ${show || adding ? "show" : ""}`} role="group" aria-label={`Subtopics to explore under ${title}`}>
+    <div className={`subrow ${adding ? "open" : ""}`} role="group" aria-label={`Subtopics to explore under ${title}`}>
       <span className="lead">Explore</span>
       {c.suggestions.map((s) => (
         <button key={s} className="sub" disabled={busy} onClick={() => actions.explore(containerId, s)}>
@@ -100,7 +110,7 @@ export function SubtopicRow({ containerId, title, show }: { containerId: string;
           maxLength={300}
         />
       ) : (
-        <button className="sub" disabled={busy} aria-label={`Name your own subtopic under ${title}`} onClick={() => setAdding(true)} style={{ padding: "0 8px" }}>
+        <button className="sub add" disabled={busy} aria-label={`Name your own subtopic under ${title}`} title="Name your own subtopic" onClick={() => setAdding(true)}>
           <Plus style={{ width: 14, height: 14 }} />
         </button>
       )}
@@ -114,14 +124,17 @@ export function PendingRow({ containerId }: { containerId: string }) {
   if (!p) return null;
   if (p.status === "writing")
     return (
-      <div className="writing" aria-live="polite">
-        <span className="n">Writing… · {p.subtopic}</span>
+      <div className="writing" aria-live="polite" data-pending-for={containerId}>
+        <span className="n">
+          <span className="spin" aria-hidden="true" />
+          Writing… · {p.subtopic}
+        </span>
         <span className="skel" style={{ width: "60%" }} aria-hidden="true" />
         <span className="skel" style={{ width: "85%" }} aria-hidden="true" />
       </div>
     );
   return (
-    <p className="fail" role="alert">
+    <p className="fail" role="alert" data-pending-for={containerId}>
       Couldn't add a block. Your page is unchanged.{p.error ? ` (${p.error})` : ""}{" "}
       <button onClick={() => actions.explore(containerId, p.subtopic)}>Try again</button>
     </p>
@@ -146,12 +159,16 @@ function Mentions({ links, selfId }: { links: SideLink[]; selfId: string }) {
   );
 }
 
-function BlockMenu({ id, isRoot, onClose }: { id: string; isRoot: boolean; onClose: () => void }) {
+function BlockMenu({ id, isRoot, at, onClose }: { id: string; isRoot: boolean; at: "grip" | "dots"; onClose: () => void }) {
   const { actions, doc } = useView();
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const onDoc = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) onClose();
+      const t = e.target as HTMLElement;
+      if (!ref.current || ref.current.contains(t)) return;
+      // A click on this block's own trigger (⋯ or grip) toggles the menu itself.
+      if (ref.current.parentElement?.contains(t) && t.closest(".dots, .grip")) return;
+      onClose();
     };
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     document.addEventListener("mousedown", onDoc);
@@ -170,7 +187,16 @@ function BlockMenu({ id, isRoot, onClose }: { id: string; isRoot: boolean; onClo
   const siblings = b?.parentId ? (doc.blocks[b.parentId] ?? doc.links[b.parentId])?.childIds ?? [] : [];
   const idx = siblings.indexOf(id);
   return (
-    <div className="menu" ref={ref} role="menu" style={{ left: -30, top: 32 }}>
+    <div className="menu" ref={ref} role="menu" style={at === "grip" ? { left: -30, top: 32 } : { right: 0, top: 34 }}>
+      <button className="b" role="menuitem" onClick={run(() => actions.startEdit(id))}>
+        Edit
+      </button>
+      {!isRoot && (
+        <button className="b" role="menuitem" onClick={run(() => actions.relate(id))}>
+          Relate…
+        </button>
+      )}
+      <hr />
       {!isRoot && (
         <>
           <button className="b" role="menuitem" onClick={run(() => actions.requestMove(id))}>
@@ -203,11 +229,26 @@ function BlockMenu({ id, isRoot, onClose }: { id: string; isRoot: boolean; onClo
   );
 }
 
-export function BlockView({ id, depth, parentExplored = false, afterBody }: { id: string; depth: number; parentExplored?: boolean; afterBody?: React.ReactNode }) {
+/** Outline number ("1", "1.2", "1.2.2"): top-level sections count from 1 under the root; blocks
+ *  without a number (e.g. under a side link) number nothing below them. Hidden blocks are skipped. */
+export function BlockView({
+  id,
+  depth,
+  parentExplored = false,
+  afterBody,
+  num,
+}: {
+  id: string;
+  depth: number;
+  parentExplored?: boolean;
+  afterBody?: React.ReactNode;
+  num?: string;
+}) {
   const view = useView();
-  const { doc, hideExplored, editingId, newIds, latestId, highlight, flashId, actions } = view;
+  const { doc, hideExplored, editingId, newIds, highlight, flashId, actions } = view;
   const b = doc.blocks[id];
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [menu, setMenu] = useState<"grip" | "dots" | null>(null);
+  const [editFocus, setEditFocus] = useState<"title" | "body">("body");
   const [drop, setDrop] = useState<DropPos | null>(null);
   if (!b) return null;
   const explored = b.lifecycle === "explored";
@@ -218,7 +259,13 @@ export function BlockView({ id, depth, parentExplored = false, afterBody }: { id
   const editing = editingId === id;
   const links = isRoot ? [] : linksOf(doc, id);
   const titleText = b.title || "Untitled";
-  const showSubs = latestId === id;
+  const visibleKids = b.childIds.filter((c) => doc.blocks[c] && !(hideExplored && doc.blocks[c].lifecycle === "explored"));
+  const kidNum = (i: number) => (isRoot ? `${i + 1}` : num ? `${num}.${i + 1}` : undefined);
+  const editFrom = (field: "title" | "body") =>
+    editOnClick(() => {
+      setEditFocus(field);
+      actions.startEdit(id);
+    });
 
   const cls = [
     "block",
@@ -243,7 +290,7 @@ export function BlockView({ id, depth, parentExplored = false, afterBody }: { id
   };
 
   return (
-    <section className={cls} data-block-id={id} aria-label={`${titleText}${explored ? " (explored draft)" : ""}`}>
+    <section className={cls} data-block-id={id} aria-label={`${titleText}${explored ? " (draft)" : ""}`}>
       <div
         className="self"
         tabIndex={-1}
@@ -264,7 +311,7 @@ export function BlockView({ id, depth, parentExplored = false, afterBody }: { id
             draggable
             aria-label={`Drag to move, click for actions: ${titleText}`}
             aria-haspopup="menu"
-            aria-expanded={menuOpen}
+            aria-expanded={menu === "grip"}
             onDragStart={(e) => {
               dragId = id;
               e.dataTransfer.effectAllowed = "move";
@@ -273,40 +320,18 @@ export function BlockView({ id, depth, parentExplored = false, afterBody }: { id
               if (sec) e.dataTransfer.setDragImage(sec, 20, 20);
             }}
             onDragEnd={() => (dragId = null)}
-            onClick={() => setMenuOpen((o) => !o)}
+            onClick={() => setMenu((m) => (m === "grip" ? null : "grip"))}
           >
             <Grip />
           </button>
         )}
-        {menuOpen && <BlockMenu id={id} isRoot={isRoot} onClose={() => setMenuOpen(false)} />}
-
-        {!editing && (
-          <div className="toolbar" role="toolbar" aria-label={`Actions for ${titleText}`}>
-            {!isRoot && (
-              <button className="b sm" onClick={() => actions.relate(id)}>
-                Relate
-              </button>
-            )}
-            <button className="b sm" onClick={() => actions.startEdit(id)}>
-              Edit
-            </button>
-            {isRoot && (
-              <button className="b sm" onClick={() => actions.requestNewVersion(id)}>
-                New version
-              </button>
-            )}
-            {!isRoot && (
-              <button className="b sm icon" aria-label={`More actions for ${titleText}`} onClick={() => setMenuOpen(true)}>
-                <Dots style={{ width: 14, height: 14 }} />
-              </button>
-            )}
-          </div>
-        )}
+        {menu && <BlockMenu id={id} isRoot={isRoot} at={menu} onClose={() => setMenu(null)} />}
 
         {editing ? (
           <Editor
             initial={{ title: b.title, body: b.body }}
             titleLabel={isRoot ? "Topic title" : "Title"}
+            focus={editFocus}
             onSave={(p) => actions.saveEdit(id, p)}
             onCancel={actions.cancelEdit}
           />
@@ -325,7 +350,7 @@ export function BlockView({ id, depth, parentExplored = false, afterBody }: { id
                   </svg>
                 </button>
               )}
-              <Heading depth={depth} id={id}>
+              <Heading depth={depth} id={id} num={num} onClick={editFrom("title")}>
                 {titleText}
               </Heading>
               {newIds.has(id) && <span className="pill new">New</span>}
@@ -337,19 +362,29 @@ export function BlockView({ id, depth, parentExplored = false, afterBody }: { id
                     <Check />
                   </button>
                 )}
+                <button
+                  className={`dots ${menu === "dots" ? "open" : ""}`}
+                  aria-label={`Actions for ${titleText}`}
+                  aria-haspopup="menu"
+                  aria-expanded={menu === "dots"}
+                  title="Edit, relate, move, new version, delete"
+                  onClick={() => setMenu((m) => (m === "dots" ? null : "dots"))}
+                >
+                  <Dots style={{ width: 16, height: 16 }} />
+                </button>
               </span>
             </div>
-            <Body text={b.body} />
+            <Body text={b.body} onClick={editFrom("body")} />
             <Mentions links={links} selfId={id} />
           </>
         )}
         {afterBody}
-        {!editing && <SubtopicRow containerId={id} title={titleText} show={showSubs} />}
+        {!editing && <SubtopicRow containerId={id} title={titleText} />}
       </div>
       {(!collapsed || isRoot) && (
         <div className="children">
-          {b.childIds.map((c) => (
-            <BlockView key={c} id={c} depth={depth + 1} parentExplored={explored} />
+          {visibleKids.map((c, i) => (
+            <BlockView key={c} id={c} depth={depth + 1} parentExplored={explored} num={kidNum(i)} />
           ))}
           <PendingRow containerId={id} />
         </div>

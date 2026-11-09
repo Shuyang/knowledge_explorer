@@ -44,7 +44,27 @@ type Dialog =
 
 const NEW_MS = 8000;
 
-export function DocPage({ docId, onDoc }: { docId: string; onDoc: (d: Doc | null) => void }) {
+/** Bring an element into view if it isn't already: tall blocks align their top under the top bar. */
+function reveal(selector: string) {
+  setTimeout(() => {
+    const el = document.querySelector<HTMLElement>(selector);
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    if (r.top >= 56 && r.bottom <= window.innerHeight - 24) return;
+    el.scrollIntoView({ behavior: "smooth", block: r.height > window.innerHeight * 0.6 ? "start" : "center" });
+  }, 40);
+}
+
+export function DocPage({
+  docId,
+  onDoc,
+  onPending,
+}: {
+  docId: string;
+  onDoc: (d: Doc | null) => void;
+  /** Reports blocks being written, so the sidebar can show them. */
+  onPending?: (p: Record<string, Pending>) => void;
+}) {
   const { settings, updateSettings, refreshDocs, navigate } = useApp();
   const toast = useToast();
   const [doc, setDoc] = useState<Doc | null>(null);
@@ -52,7 +72,6 @@ export function DocPage({ docId, onDoc }: { docId: string; onDoc: (d: Doc | null
   const [editingId, setEditingId] = useState<string | null>(null);
   const [pending, setPending] = useState<Record<string, Pending>>({});
   const [newIds, setNewIds] = useState<Set<string>>(new Set());
-  const [latestId, setLatestId] = useState<string | null>(null);
   const [dialog, setDialog] = useState<Dialog | null>(null);
   const [peek, setPeek] = useState<string | null>(null);
   const [flashId, setFlashId] = useState<string | null>(null);
@@ -129,9 +148,13 @@ export function DocPage({ docId, onDoc }: { docId: string; onDoc: (d: Doc | null
     [commit, toast],
   );
 
+  useEffect(() => {
+    onPending?.(pending);
+  }, [pending, onPending]);
+  useEffect(() => () => onPending?.({}), [onPending]);
+
   const markNew = useCallback((id: string) => {
     setNewIds((s) => new Set(s).add(id));
-    setLatestId(id);
     setTimeout(() => setNewIds((s) => {
       const n = new Set(s);
       n.delete(id);
@@ -161,6 +184,13 @@ export function DocPage({ docId, onDoc }: { docId: string; onDoc: (d: Doc | null
     window.addEventListener("ke:goto", on);
     return () => window.removeEventListener("ke:goto", on);
   }, [goto]);
+
+  // The sidebar's topic menu asks the open page to delete itself (so pending saves are dropped).
+  useEffect(() => {
+    const on = () => setDialog({ kind: "deleteDoc" });
+    window.addEventListener("ke:delete-doc", on);
+    return () => window.removeEventListener("ke:delete-doc", on);
+  }, []);
 
   // Resume where the user left off; remember the block in view.
   useEffect(() => {
@@ -236,6 +266,7 @@ export function DocPage({ docId, onDoc }: { docId: string; onDoc: (d: Doc | null
         if (!d || pending[parentId]?.status === "writing") return;
         setPending((p) => ({ ...p, [parentId]: { subtopic, status: "writing" } }));
         if (d.ui.collapsed.includes(parentId)) commit(setCollapsed(d, parentId, false));
+        reveal(`[data-pending-for="${parentId}"]`);
         const newBlockId = newId();
         try {
           const { draft } = await api.explore(d.id, { parentId, subtopic, newBlockId, context: contextFor(docRef.current!, parentId) });
@@ -248,6 +279,7 @@ export function DocPage({ docId, onDoc }: { docId: string; onDoc: (d: Doc | null
             return n;
           });
           markNew(newBlockId);
+          reveal(`[data-block-id="${newBlockId}"]`);
         } catch (e) {
           setPending((p) => ({ ...p, [parentId]: { subtopic, status: "error", error: (e as Error).message } }));
         }
@@ -262,10 +294,11 @@ export function DocPage({ docId, onDoc }: { docId: string; onDoc: (d: Doc | null
       startEdit: (id) => setEditingId(id),
       cancelEdit: () => setEditingId(null),
       saveEdit(id, patch) {
-        if (apply((x) => editContent(x, id, patch))) {
-          setEditingId(null);
-          void api.invalidate(docRef.current!.id, [id]);
-        }
+        const before = docRef.current;
+        if (!apply((x) => editContent(x, id, patch))) return false;
+        setEditingId(null);
+        if (docRef.current !== before) void api.invalidate(docRef.current!.id, [id]);
+        return true;
       },
       relate: (id) => setDialog({ kind: "relate", from: id }),
       openLink: (linkId) => setPeek(linkId),
@@ -354,7 +387,6 @@ export function DocPage({ docId, onDoc }: { docId: string; onDoc: (d: Doc | null
     editingId,
     pending,
     newIds,
-    latestId,
     highlight,
     flashId,
     actions,
@@ -375,7 +407,7 @@ export function DocPage({ docId, onDoc }: { docId: string; onDoc: (d: Doc | null
           </span>
           <div style={{ display: "flex", alignItems: "center", gap: 2, position: "relative" }}>
             <span className="meta">
-              {c.blocks} blocks · {c.explored ? `${c.explored} explored` : "all inked"}
+              {c.blocks} blocks · {c.explored ? `${c.explored} draft${c.explored === 1 ? "" : "s"}` : "all inked"}
             </span>
             <button className="b" onClick={() => setDialog({ kind: "export" })}>
               Export
@@ -422,7 +454,7 @@ export function DocPage({ docId, onDoc }: { docId: string; onDoc: (d: Doc | null
               />
               {settings.hideExplored && c.explored > 0 && (
                 <p style={{ fontSize: 13, color: "#73726E", marginTop: 24 }}>
-                  Showing inked notes only · {c.explored} explored hidden.{" "}
+                  Showing inked notes only · {c.explored} draft{c.explored === 1 ? "" : "s"} hidden.{" "}
                   <button className="b sm" onClick={() => updateSettings({ hideExplored: false })}>Show all</button>
                 </p>
               )}
@@ -569,7 +601,7 @@ export function DocPage({ docId, onDoc }: { docId: string; onDoc: (d: Doc | null
             if (apply(cleanup)) {
               void api.invalidate(before.id, removed);
               setPeek(null);
-              toast({ text: "Removed explored drafts", action: { label: "Undo", run: () => commit({ ...before, updatedAt: new Date().toISOString() }) } });
+              toast({ text: "Removed drafts", action: { label: "Undo", run: () => commit({ ...before, updatedAt: new Date().toISOString() }) } });
             }
           }}
         />

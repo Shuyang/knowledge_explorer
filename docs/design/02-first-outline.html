@@ -23,11 +23,12 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stro
 .opt{display:inline-flex;align-items:center;min-height:26px;padding:0 8px;border-radius:4px;border:0;background:transparent;font:inherit;font-size:13px;color:#73726E;cursor:pointer}
 .opt:hover{background:#EFEFED}
 .lbl{font-size:12px;font-weight:500;color:#73726E;padding:6px 10px 4px}
+.fl{width:max-content;max-width:100%;padding:4px;gap:2px!important;border-radius:10px;background:#FFFFFF;box-shadow:rgba(15,15,15,0.05) 0 0 0 1px,rgba(15,15,15,0.1) 0 3px 6px,rgba(15,15,15,0.12) 0 9px 24px}.fl button{box-shadow:none!important;background:transparent!important;border:0!important;border-radius:6px!important;color:#5F5E5B!important;padding:0 9px!important;min-height:28px;font-size:13px!important}.fl>span{font-size:12px!important;font-weight:500;padding:0 6px 0 8px!important}
 </style>
 </head>
 <body>
 <div style="min-height: 1120px; display: flex; flex-wrap: wrap">
-  <nav aria-label="Workspace" style="flex: 1 1 240px; max-width: 260px; background: #F7F7F5; padding: 12px 8px; box-sizing: border-box; display: flex; flex-direction: column; gap: 1px">
+  <nav aria-label="Workspace" style="flex: 0 0 280px; width: 280px; background: #F7F7F5; padding: 12px 8px; box-sizing: border-box; display: flex; flex-direction: column; gap: 1px">
     <div style="display: flex; align-items: center; gap: 8px; padding: 6px 8px 12px; font-size: 14px; font-weight: 600">
       <span aria-hidden="true" style="width: 22px; height: 22px; border-radius: 5px; background: #37352F; color: #FFFFFF; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700">K</span>
       Knowledge Explorer
@@ -55,7 +56,7 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stro
 
     <div style="flex: 1; display: flex; flex-wrap: wrap; align-items: flex-start">
       <main style="flex: 999 1 560px; min-width: 0; padding: 56px 32px 96px; box-sizing: border-box">
-        <article style="max-width: 708px; margin: 0 auto; display: flex; flex-direction: column; gap: 6px; padding: 0 32px; box-sizing: border-box">
+        <article style="max-width: 836px; margin: 0 auto; display: flex; flex-direction: column; gap: 6px; padding: 0 32px; box-sizing: border-box">
           <h1 style="margin: 0 0 8px; font-size: 40px; font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; color: #141413; display: flex; align-items: center; gap: 12px">ML Loss Functions</h1>
           <p class="p" style="color: #141413">A loss function turns “how wrong is the model?” into a number the optimizer can push down. Which loss you pick encodes what “wrong” means for the task.</p>
 
@@ -65,14 +66,14 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stro
             <button class="b" aria-label="Dismiss tip" style="min-height: 24px; padding: 0 4px; color: #73726E"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width: 14px; height: 14px"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
           </div>
 
-          <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 16px"><h2 class="h2" style="margin-top: 0; display: flex; align-items: center; gap: 8px; color: #141413">Regression losses</h2><p class="p" style="color: #141413">How to penalize numerical prediction error, and how strongly to punish outliers versus small, frequent mistakes.</p><h2 class="h2" style="margin-top: 22px; display: flex; align-items: center; gap: 8px; color: #141413">Classification losses</h2><p class="p" style="color: #141413">How to optimize predicted class probabilities or decision margins so the right class wins with confidence.</p></div><div style="display: flex; flex-direction: column; gap: 6px; background: #F3F6FC; padding: 28px 32px 32px; border-radius: 6px; margin: 16px -32px 0; margin-top: 24px">
+          <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 16px"><h2 class="h2" style="margin-top: 0; display: flex; align-items: center; gap: 8px; color: #141413"><span style="color: #8F8E8A; font-weight: 500; margin-right: 0.45em">1</span>Regression losses</h2><p class="p" style="color: #141413">How to penalize numerical prediction error, and how strongly to punish outliers versus small, frequent mistakes.</p><h2 class="h2" style="margin-top: 22px; display: flex; align-items: center; gap: 8px; color: #141413"><span style="color: #8F8E8A; font-weight: 500; margin-right: 0.45em">2</span>Classification losses</h2><p class="p" style="color: #141413">How to optimize predicted class probabilities or decision margins so the right class wins with confidence.</p></div><div style="display: flex; flex-direction: column; gap: 6px; background: #F3F6FC; padding: 28px 32px 32px; border-radius: 6px; margin: 16px -32px 0; margin-top: 24px">
           
           
 
           
           
 
-          <h2 class="h2" style="margin-top: 0; display: flex; align-items: center; gap: 8px">Ranking losses<button class="ck" aria-label="Ink Ranking losses" aria-pressed="false" style="margin-left: auto"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px"><circle cx="12" cy="12" r="10"></circle><path d="m8 12.5 2.5 2.5 5.5-5.5"></path></svg></button></h2>
+          <h2 class="h2" style="margin-top: 0; display: flex; align-items: center; gap: 8px"><span style="color: #8F8E8A; font-weight: 500; margin-right: 0.45em">3</span>Ranking losses<button class="ck" aria-label="Ink Ranking losses" aria-pressed="false" style="margin-left: auto"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px"><circle cx="12" cy="12" r="10"></circle><path d="m8 12.5 2.5 2.5 5.5-5.5"></path></svg></button></h2>
           <p class="p">How to learn a relative ordering of items for a query, rather than an absolute score for each item.</p>
 
           <div style="position: relative; margin-top: 22px; display: flex; flex-direction: column; gap: 6px">
@@ -81,14 +82,14 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stro
               
               <button class="b" aria-label="Drag to move, click for actions" style="min-height: 26px; width: 22px; padding: 0; color: #8F8E8A"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 14px; height: 14px; fill: currentColor"><circle cx="9" cy="5" r="1.6"></circle><circle cx="9" cy="12" r="1.6"></circle><circle cx="9" cy="19" r="1.6"></circle><circle cx="15" cy="5" r="1.6"></circle><circle cx="15" cy="12" r="1.6"></circle><circle cx="15" cy="19" r="1.6"></circle></svg></button>
             </div>
-            <h2 class="h2">Representation learning losses</h2>
+            <h2 class="h2"><span style="color: #8F8E8A; font-weight: 500; margin-right: 0.45em">4</span>Representation learning losses</h2>
             <p class="p">How to shape an embedding space so that similar things land close together and dissimilar things land far apart.</p>
 
             <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 6px">
               
               
               
-            <div role="group" aria-label="Subtopics to explore under Representation learning losses" style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px"><span style="font-size: 13px; color: #73726E; padding-right: 2px">Explore</span><button class="mi">Contrastive learning overview</button><button class="mi">InfoNCE</button><button class="mi">Triplet loss</button><button class="mi">Why do embeddings need their own losses?</button><button class="mi" aria-label="Add your own topic" style="color: #141413"><svg viewBox="0 0 24 24" aria-hidden="true" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></button></div></div>
+            <div class="fl" role="group" aria-label="Subtopics to explore under Representation learning losses" style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px"><span style="font-size: 13px; color: #73726E; padding-right: 2px">Explore</span><button class="mi">Contrastive learning overview</button><button class="mi">InfoNCE</button><button class="mi">Triplet loss</button><button class="mi">Why do embeddings need their own losses?</button><button class="mi" aria-label="Add your own topic" style="color: #141413"><svg viewBox="0 0 24 24" aria-hidden="true" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></button></div></div>
           </div>
         </div>
         </article>

@@ -10,6 +10,7 @@ import {
   deleteImpact,
   editContent,
   ink,
+  outlineNumbers,
   inkChain,
   moveBlock,
   moveChain,
@@ -38,6 +39,20 @@ function lossDoc() {
 }
 
 const life = (d: Doc, id: string) => (d.blocks[id] ?? d.links[id]).lifecycle;
+
+describe("outline numbers", () => {
+  it("numbers the tree 1, 1.1, 1.1.2 and skips filtered blocks", () => {
+    const { doc, reg, rank, rep } = lossDoc();
+    const all = outlineNumbers(doc);
+    expect([reg, rank, "pairwise", rep, "contrastive", "infonce", "formula", "temp"].map((id) => all.get(id))).toEqual([
+      "1", "2", "2.1", "3", "3.1", "3.1.1", "3.1.1.1", "3.1.1.2",
+    ]);
+    expect(all.has(doc.rootId)).toBe(false);
+    const noReg = outlineNumbers(doc, (b) => b.id !== reg);
+    expect(noReg.get(rank)).toBe("1");
+    expect(noReg.get("temp")).toBe("2.1.1.2");
+  });
+});
 
 describe("outline creation (AC1)", () => {
   it("root is inked, displayed sections are explored", () => {
@@ -202,12 +217,17 @@ describe("export (AC13)", () => {
     d = ink(d, [rank, "pairwise", rep, "contrastive", "L"]);
     const md = toMarkdown(d, { scope: "inked", relationsAtEnd: true, latex: true });
     expect(md).toContain("# ML Loss Functions");
-    expect(md).toContain("### Pairwise loss");
+    // Numbers count only exported blocks: Regression (a draft) is skipped in the inked export.
+    expect(md).toContain("## 1 Ranking losses");
+    expect(md).toContain("### 1.1 Pairwise loss");
+    expect(md).toContain("### 2.1 Contrastive learning");
+    expect(md).toContain("_Connects [Pairwise loss](#11-pairwise-loss) and [Contrastive learning](#21-contrastive-learning)_");
     expect(md).not.toContain("Temperature");
     expect(md).toContain("## Related concepts");
     expect(md).toContain("### Pairwise loss ↔ Contrastive learning");
     const plain = toMarkdown(d, { scope: "all", relationsAtEnd: false, latex: false });
     expect(plain).toContain("_(draft)_");
+    expect(plain).toContain("##### 3.1.1.2 Temperature τ");
     expect(plain).not.toContain("$$");
   });
 });

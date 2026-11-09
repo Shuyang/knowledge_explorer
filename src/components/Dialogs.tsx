@@ -587,8 +587,8 @@ export function CleanupDialog({ doc, onConfirm, onCancel }: { doc: Doc; onConfir
         <h2>Clean up drafts?</h2>
         <p className="sub-t">
           {none
-            ? "There are no explored drafts on this page. Everything is inked."
-            : `This removes ${p.blocks} explored block${p.blocks === 1 ? "" : "s"}${p.links ? ` and ${p.links} explored relation${p.links === 1 ? "" : "s"}` : ""}. Inked blocks are never touched.`}
+            ? "There are no drafts on this page. Everything is inked."
+            : `This removes ${p.blocks} draft block${p.blocks === 1 ? "" : "s"}${p.links ? ` and ${p.links} draft relation${p.links === 1 ? "" : "s"}` : ""}. Inked blocks are never touched.`}
         </p>
       </div>
       <div className="actions">

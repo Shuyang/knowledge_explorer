@@ -14,7 +14,7 @@ The experience should feel like **constructing one's own structured reference pa
 The product distinguishes two **orthogonal dimensions**:
 
 1. **Structure:** hierarchical **tree nodes** and cross-node **side links**.
-2. **Lifecycle:** **Generated** (not visible), **Explored** (visible), **Inked** (explicitly hardened and saved as a note).
+2. **Lifecycle:** **Generated** (not visible), **Draft** (visible; called "Explored" in earlier drafts of this PRD and stored as `explored` in the data), **Inked** (explicitly hardened and saved as a note).
 
 These dimensions must not be conflated. A tree node or a side link can independently occupy any lifecycle state.
 
@@ -31,7 +31,7 @@ These dimensions must not be conflated. A tree node or a side link can independe
 
 - Turn a topic into a concise, understandable **structured outline**.
 - Make **progressive exploration** the primary learning interaction.
-- Allow user-controlled, block-level promotion of explored material into lasting notes.
+- Allow user-controlled, block-level promotion of draft material into lasting notes.
 - Represent cross-topic/cross-node relationships without disrupting the primary document hierarchy.
 - Preserve work locally and make content exportable and portable.
 - Reduce perceived latency and model cost using generation/display decoupling and caching.
@@ -61,11 +61,11 @@ The application should be general-purpose enough for other learning domains; do 
 
 The journey is iterative, not a forced wizard or a rigid sequence.
 
-1. **Start:** User enters a topic. The application creates a document and displays a concise hierarchical outline. The root topic is **Inked** from the start; every other block actually displayed is **Explored**. The system may also generate additional blocks invisibly and cache them as **Generated**.
-2. **Explore:** User chooses a specific node and asks for deeper detail, e.g., a conceptual explanation, paragraph, formula, image, or narrower subtopic. Each exploration operation adds/reveals **one knowledge block at a time**. A cache hit can reveal a pre-generated block; otherwise, the system can call an LLM. Newly displayed content becomes **Explored** immediately.
-3. **Connect:** User explores a relationship between two nodes, e.g., InfoNCE vs. sampled softmax or contrastive vs. pairwise learning. This becomes a **side link with its own substantive content**, not just a line or pointer. Side links also follow Generated → Explored → Inked lifecycle.
+1. **Start:** User enters a topic. The application creates a document and displays a concise hierarchical outline. The root topic is **Inked** from the start; every other block actually displayed is **Draft**. The system may also generate additional blocks invisibly and cache them as **Generated**.
+2. **Explore:** User chooses a specific node and asks for deeper detail, e.g., a conceptual explanation, paragraph, formula, image, or narrower subtopic. Each exploration operation adds/reveals **one knowledge block at a time**. A cache hit can reveal a pre-generated block; otherwise, the system can call an LLM. Newly displayed content becomes **Draft** immediately.
+3. **Connect:** User explores a relationship between two nodes, e.g., InfoNCE vs. sampled softmax or contrastive vs. pairwise learning. This becomes a **side link with its own substantive content**, not just a line or pointer. Side links also follow Generated → Draft → Inked lifecycle.
 4. **Curate:** User edits, organizes, deletes, and individually inks material. Inking **one block** does not automatically ink its children, connected nodes, or side links. A block can only be inked under an inked parent: if its ancestors are not inked yet, the app offers to ink the whole chain in one explicit action. Inked content remains editable and explorable.
-5. **Resume:** After returning later, user can reopen the document, see their visible explored/inked knowledge, and continue where they left off. Unseen generated content remains an internal implementation detail.
+5. **Resume:** After returning later, user can reopen the document, see their visible draft/inked knowledge, and continue where they left off. Unseen generated content remains an internal implementation detail.
 6. **Export:** User can export knowledge into portable formats without requiring a third-party service.
 
 Future journey: review inked knowledge, mark familiarity, generate interview questions or flashcards, and revisit weaknesses. This is **not in MVP** and does **not require adding unused fields now**.
@@ -87,15 +87,15 @@ Future journey: review inked knowledge, mark familiarity, generate interview que
 - Avoid hard-coding named categories such as `Formula`, `FAQ`, or `Comparison` as the core structural abstraction. Those are content/presentation patterns, not the fundamental hierarchy.
 - Each block needs a **stable identity** so edits, relationships, persistence, and later extensions remain possible.
 - Support text, mathematical notation, and images as content. The MVP should handle these formats with appropriate rendering and persistence; do not require sophisticated image generation.
-- Blocks can be edited regardless of lifecycle state. Generated blocks are not exposed in UI; if modified internally, the cache must honor that edit until the block is shown or discarded. User editing a visible block leaves it at least Explored.
+- Blocks can be edited regardless of lifecycle state. Generated blocks are not exposed in UI; if modified internally, the cache must honor that edit until the block is shown or discarded. User editing a visible block leaves it at least Draft.
 
 ### 5.3 Tree structure
 
 - Tree nodes can contain child nodes and can be expanded incrementally.
 - **One exploration action reveals/adds one block**, not an entire subtree. This does **not** mean only one branch is allowed to be open in the UI at a time.
-- Initial displayed outline can contain multiple nodes: the root topic is **Inked** and all other initially visible nodes are already **Explored**. Do not label visible outlines as Generated.
-- An individual node can be Explored while its children are Generated or Explored, and an Inked node can have children in any state, subject to the usual visibility and ink-order rules.
-- User must be able to change the organization and content of explored/inked nodes; deletion needs a safe UX, with implementation details left to design.
+- Initial displayed outline can contain multiple nodes: the root topic is **Inked** and all other initially visible nodes are already **Draft**. Do not label visible outlines as Generated.
+- An individual node can be Draft while its children are Generated or Draft, and an Inked node can have children in any state, subject to the usual visibility and ink-order rules.
+- User must be able to change the organization and content of draft/inked nodes; deletion needs a safe UX, with implementation details left to design.
 
 ### 5.4 Side links
 
@@ -111,21 +111,21 @@ Future journey: review inked knowledge, mark familiarity, generate interview que
 | State | Definition | User-visible? | Expected retention |
 |---|---|---|---|
 | **Generated** | AI-generated and cached but **never yet shown** to the user | **No** | Disposable internal cache |
-| **Explored** | Content **has been shown** to the user, whether on initial document creation or by subsequent expansion | **Yes** | Retain for short-term continuation |
+| **Draft** | Content **has been shown** to the user, whether on initial document creation or by subsequent expansion | **Yes** | Retain for short-term continuation |
 | **Inked** | User explicitly inked the **individual block**, hardening and saving it as durable notes | **Yes** | Persist long-term |
 
 **Hard invariants:**
 
-1. **Generated means invisible.** Once content is rendered/shown to the user, it is at least **Explored**, regardless of whether they clicked anything.
+1. **Generated means invisible.** Once content is rendered/shown to the user, it is at least **Draft**, regardless of whether they clicked anything.
 2. **Inking is per block only.** No silent inking of a parent, child, subtree, endpoint, or link.
-3. **Ink order.** A block can be inked only if its parent is inked; the root topic is always inked. A side link can be inked only if both endpoints are inked. When a prerequisite is missing, the app offers to ink the chain as one explicit action; the user may choose to always ink the chain without being asked. The same applies when an inked block is moved under an Explored parent: the app offers to ink the new parent chain (with the same "always" option); if the user declines, the move does not happen.
+3. **Ink order.** A block can be inked only if its parent is inked; the root topic is always inked. A side link can be inked only if both endpoints are inked. When a prerequisite is missing, the app offers to ink the chain as one explicit action; the user may choose to always ink the chain without being asked. The same applies when an inked block is moved under an Draft parent: the app offers to ink the new parent chain (with the same "always" option); if the user declines, the move does not happen.
 4. **Exploration is per block only.** Each explicit Explore expansion reveals/adds one block. Background pre-generation of additional blocks is allowed, but those remain invisible until actually presented.
 5. **Explore and Ink are independent of tree vs. side link structure.**
-6. **Any content already explored or edited by the user must never be silently overwritten by AI regeneration.** Explicit user-directed replacement may be supported if it is clear and intentional.
+6. **Any content already shown to or edited by the user must never be silently overwritten by AI regeneration.** Explicit user-directed replacement may be supported if it is clear and intentional.
 7. Inked blocks remain editable and expandable. New content added beneath an inked block is not automatically inked.
 8. Do not expose `Generated` as an apparent user-visible status or section.
 
-**Lifecycle interpretation:** The primary promotion path is Generated → Explored → Inked. Inking cannot be undone: there is no un-ink/demotion workflow. An inked block can still be edited or deleted. For the MVP, there is also no requirement to implement undo history, or regeneration versions beyond basic safe editing, unless the design naturally calls for them. The implementation should not assume AI-generated content is immutable.
+**Lifecycle interpretation:** The primary promotion path is Generated → Draft → Inked. Inking cannot be undone: there is no un-ink/demotion workflow. An inked block can still be edited or deleted. For the MVP, there is also no requirement to implement undo history, or regeneration versions beyond basic safe editing, unless the design naturally calls for them. The implementation should not assume AI-generated content is immutable.
 
 ## 6. Generation, caching, and latency
 
@@ -134,10 +134,10 @@ The primary goal is to **decouple LLM generation from what is displayed**.
 - Generate an initial **outline-first** response that is concise and structured. Avoid generating a full textbook and requiring users to delete most of it.
 - The backend is permitted to **pre-generate or batch-generate** more content than is immediately shown, and keep this invisible in a cache.
 - An Explore operation should first consult relevant generated/cache content; only request additional LLM generation when needed.
-- Showing a cached block promotes it from Generated to Explored.
+- Showing a cached block promotes it from Generated to Draft.
 - The system should support partial generation or graceful fallback if an LLM call fails, and preserve user-visible work.
 - Prioritize **perceived speed** and **reasonable token cost**; the PRD does not mandate a specific prefetch breadth, batch size, cache eviction policy, or provider.
-- Cache invalidation must not overwrite Explored/Inked content. Changes to context may invalidate **unseen Generated** candidates.
+- Cache invalidation must not overwrite Draft/Inked content. Changes to context may invalidate **unseen Generated** candidates.
 - AI generation should be grounded in the current document context and nearby related nodes when relevant, without indiscriminately sending the entire knowledge base on every request.
 - The generation architecture should support interchangeable model providers or a separable AI service boundary; avoid embedding provider assumptions into the knowledge data model.
 
@@ -147,11 +147,11 @@ The primary goal is to **decouple LLM generation from what is displayed**.
 
 MVP should support:
 
-- Editing individual visible blocks (both Explored and Inked).
+- Editing individual visible blocks (both Draft and Inked).
 - Adding and organizing blocks into a tree.
 - Deleting blocks and side links safely.
 - Creating/editing a side link and its explanatory content.
-- Inking an individual Explored block.
+- Inking an individual Draft block.
 - Continuing exploration from any visible block, including Inked blocks.
 - Maintaining user edits without silent AI overwrite.
 
@@ -160,7 +160,7 @@ Design decisions such as inline vs. modal editing, deletion affordances, how ink
 ## 8. Local-first persistence and export
 
 - **MVP storage is local**, with no login/cloud dependency.
-- Reloading or reopening the app must restore the user's documents, all visible Explored/Inked content, their organization, edits, relationships, and state.
+- Reloading or reopening the app must restore the user's documents, all visible Draft/Inked content, their organization, edits, relationships, and state.
 - Generated/unseen material is a cache; it may be persisted for optimization but may be evicted safely.
 - **Inked content must be durable** and must not depend on the generated cache.
 - Keep the domain model and storage/export adapters decoupled from UI rendering.
@@ -188,7 +188,7 @@ Design intent, not a prescribed implementation:
 
 - Reading-first, structured-document experience; clean enough to be a lasting study note.
 - Encourage **gradual addition** via exploration, not bulk generation followed by deletion.
-- Distinguish Explored vs. Inked without treating them as separate structural locations.
+- Distinguish Draft vs. Inked without treating them as separate structural locations.
 - Side links should be understandable without interrupting the main narrative of the tree.
 - The invisible Generated cache must not leak into visible controls or misleading content counts.
 - Make the distinction between **Explore** and **Ink** intelligible, while keeping each operation focused on **one block**.
@@ -200,14 +200,14 @@ Design intent, not a prescribed implementation:
 
 The following are verifiable product outcomes, not implementation instructions.
 
-1. **Outline creation:** Given `ML Loss Functions`, the app produces a concise, hierarchical outline, with the root topic Inked and the other displayed blocks in Explored state.
+1. **Outline creation:** Given `ML Loss Functions`, the app produces a concise, hierarchical outline, with the root topic Inked and the other displayed blocks in Draft state.
 2. **Invisible pre-generation:** The system can cache AI-generated content that is *not shown* and remains Generated until displayed.
 3. **Incremental exploration:** Exploring one node reveals/adds **one new block**; a second exploration can reveal a second block. It must not silently expose an entire prefetched subtree.
 4. **Cache optimization:** When applicable cached content exists, exploration can complete without a separate LLM request for that block.
 5. **No silent overwrite:** After a user sees or edits a block, background generation/regeneration cannot replace its content without explicit user intent.
 6. **Single-block inking:** Inking a node whose parent is already inked saves that node alone; children and side links retain their existing states.
 7. **Ink order:** Inking a node under an un-inked parent, moving an inked node under an un-inked parent, or inking a side link with an un-inked endpoint changes nothing until the user confirms the chain (or has chosen to always ink the chain).
-8. **Inked expansion:** An inked node can be expanded, and newly revealed children become Explored, not Inked.
+8. **Inked expansion:** An inked node can be expanded, and newly revealed children become Draft, not Inked.
 9. **Relationship authoring:** The user can relate two nodes via a side link with explanatory text, edit that text, and individually ink the side link.
 10. **Side-link independence:** Inking or editing a side link does not automatically modify/ink either endpoint.
 11. **Editing:** Users can edit, move/organize, and delete visible blocks and can edit/delete side links, without corrupting the document.
@@ -223,9 +223,9 @@ These are genuine choices to resolve during design/engineering rather than presc
 - How should a user ask for the *next* block: model-suggested options, free-form request, or both?
 - How should initial outline depth/breadth adapt to broad vs. narrow subjects?
 - What prefetch batching and cache eviction policy best balance cost/latency?
-- How long should Explored-but-un-inked content be retained? MVP can persist it locally and provide an explicit clean-up action rather than enforce a time-based policy.
+- How long should Draft (un-inked) content be retained? MVP can persist it locally and provide an explicit clean-up action rather than enforce a time-based policy.
 - How best to represent links in a linear Markdown export, and which structured export schema/versioning strategy to use?
-- How should a user explicitly request AI replacement of an existing explored block while protecting their edits?
+- How should a user explicitly request AI replacement of an existing draft block while protecting their edits?
 - How should deleting a parent node or a side-link endpoint affect dependent content, with minimal data loss?
 - How to handle image blocks in portable export (embedded files/assets vs. references)?
 - What lightweight warnings or correction affordances should exist for AI-generated technical material and equations?
