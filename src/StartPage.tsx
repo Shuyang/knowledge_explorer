@@ -104,7 +104,7 @@ export function StartPage({ docs }: { docs: DocSummary[] | null }) {
               <File style={{ color: "#73726E" }} />
               <span className="name">{d.title}</span>
               <span className="m">
-                {d.blocks} blocks · {d.explored ? `${d.explored} explored` : "all inked"}
+                {d.blocks} blocks · {d.explored ? `${d.explored} draft${d.explored === 1 ? "" : "s"}` : "all inked"}
               </span>
               <span className="m when">{relTime(d.updatedAt)}</span>
             </a>

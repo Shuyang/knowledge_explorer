@@ -36,7 +36,7 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stro
       <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px">
         <div style="display: flex; flex-direction: column; gap: 6px">
           <div style="background: #F3F6FC; padding: 10px 12px; border-radius: 6px; display: flex; flex-direction: column; gap: 6px"><p class="bt" style="color: #37352F">Temperature τ</p><p class="bp" style="color: #37352F">Rescales similarity scores before the softmax…</p></div>
-          <span class="n" style="margin-top: 8px">Explored · a temporary draft: tinted, with a ✓ to ink it</span>
+          <span class="n" style="margin-top: 8px">Draft · temporary: tinted, with a ✓ to ink it</span>
         </div>
         <div style="position: relative; display: flex; flex-direction: column; gap: 6px; padding-left: 26px">
          
@@ -44,7 +44,7 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stro
           <span class="n" style="margin-top: 8px">Inked · the normal page: plain, no marker</span>
         </div>
       </div>
-      <p class="t">Inked is the norm: most of a mature page is inked, so inked blocks carry no marker at all. Explored blocks are temporary drafts and the only thing marked, by a faint blue tint and a ✓ at the right. Ticking ✓ lifts the block onto the plain page (~250 ms). Ink means “accepted into my page”, not “favorite”.</p>
+      <p class="t">Inked is the norm: most of a mature page is inked, so inked blocks carry no marker at all. Drafts are temporary and the only thing marked, by a faint blue tint and a ✓ at the right. Ticking ✓ lifts the block onto the plain page (~250 ms). Ink means “accepted into my page”, not “favorite”.</p>
       <p class="t">Generated content never appears: no placeholders, ghost rows, “ready” dots or counts. Suggestions are phrased as questions and don't reveal whether an answer is prepared.</p>
     </section>
 
@@ -53,16 +53,18 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stro
       <h2 class="h">Quiet, except the ink check</h2>
       <div style="display: flex; align-items: center; gap: 16px">
         <span style="display: flex; color: #8F8E8A; gap: 4px" aria-hidden="true"><svg viewBox="0 0 24 24" style="width: 14px; height: 14px; fill: currentColor"><circle cx="9" cy="5" r="1.6"></circle><circle cx="9" cy="12" r="1.6"></circle><circle cx="9" cy="19" r="1.6"></circle><circle cx="15" cy="5" r="1.6"></circle><circle cx="15" cy="12" r="1.6"></circle><circle cx="15" cy="19" r="1.6"></circle></svg></span>
-        <div class="menu" style="display: flex; padding: 3px">
-          <span class="b">Relate</span><span class="b">Edit</span><span class="b">···</span>
-        </div>
         <span style="display: inline-flex; color: #8F8E8A" aria-hidden="true"><svg class="i" viewBox="0 0 24 24" style="width: 18px; height: 18px"><circle cx="12" cy="12" r="10"></circle><path d="m8 12.5 2.5 2.5 5.5-5.5"></path></svg></span>
+        <span class="b" style="background: #EFEFED">···</span>
       </div>
       <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px"><span class="n" style="padding-right: 2px">Explore</span><span class="b" style="background: #F1F1EF">Why does a small τ favor hard negatives?</span><span class="b" style="background: #F1F1EF">Typical τ values</span><span class="b" style="background: #F1F1EF">+</span></div>
       <div style="display: flex; flex-direction: column; gap: 6px">
-        <div class="li"><span class="k">↳</span><span>Subtopic row at the bottom of each block (on hover or focus): click a subtopic to explore it as one new child block; + names your own. The block menu has no Explore: the block itself is already explored by being visible.</span></div>
-        <div class="li"><span class="k">⋮⋮</span><span>Grip: drag to move; click for Move to, Ask for a new version, Delete. Moving an inked block under an explored parent offers to ink the new parent chain (“Always ink the new parent chain” skips the question); declining cancels the move. There is no un-ink: edit or delete instead.</span></div>
-        <div class="li"><span class="k">✓</span><span>Ink: a faint ✓ at the right of every explored block, always visible since inking is the normal next step. Inks this block only, under an inked parent (the root is always inked). If parents aren’t inked yet it offers “Ink the chain” in one step; “Always ink the whole chain” skips the question. Side links need both ends inked.</span></div>
+        <div class="li"><span class="k">#</span><span>Blocks carry outline numbers (1, 1.1, 1.2.2 …) that follow the current tree order and update after moves, deletes and Hide drafts; nested blocks are indented with a faint guide line.</span></div>
+        <div class="li"><span class="k">↳</span><span>Subtopic row at the bottom of every block, shown on hover or focus as a bar floating over the content below (so nothing shifts) — the same on the latest block and in the side peek; always in flow on touch. click a subtopic to explore it as one new child block; + names your own. The page scrolls to the “Writing…” placeholder, then to the new block when it arrives; the sidebar lists the pending block with a spinner meanwhile. The block menu has no Explore: the block itself is already visible.</span></div>
+        <div class="li"><span class="k">···</span><span>Top right of each block (on hover or focus), just right of ✓: Edit, Relate…, Move to…, Move up/down, Ask for a new version, Delete. There is no floating toolbar.</span></div>
+        <div class="li"><span class="k">⇔</span><span>Sidebar: drag its right edge to resize (200–480 px, remembered; double-click resets). Each topic row has ··· on hover with Delete topic…, confirmed in a dialog.</span></div>
+        <div class="li"><span class="k">✎</span><span>Click a title or body to edit it in place. No Save/Cancel buttons: click outside to save, Esc cancels, ⌘↵ saves; paste or drop an image to insert it.</span></div>
+        <div class="li"><span class="k">⋮⋮</span><span>Grip: drag to move; click for the same menu as ···. Moving an inked block under a draft parent offers to ink the new parent chain (“Always ink the new parent chain” skips the question); declining cancels the move. There is no un-ink: edit or delete instead.</span></div>
+        <div class="li"><span class="k">✓</span><span>Ink: a faint ✓ at the right of every draft block, always visible since inking is the normal next step. Inks this block only, under an inked parent (the root is always inked). If parents aren’t inked yet it offers “Ink the chain” in one step; “Always ink the whole chain” skips the question. Side links need both ends inked.</span></div>
         <div class="li"><span class="k">R</span><span>Relate starts a side link from this block.</span></div>
       </div>
     </section>
@@ -94,7 +96,7 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stro
         <span class="b" style="box-shadow: rgba(15,15,15,0.12) 0 0 0 1px inset">Use new</span>
         <span class="b" style="box-shadow: rgba(15,15,15,0.12) 0 0 0 1px inset">Add as separate block</span>
       </div>
-      <p class="t">Only via ⋮⋮ › Ask for a new version. User-changed blocks show a grey “Edited” tag.</p>
+      <p class="t">Only via ··· (or ⋮⋮) › Ask for a new version. User-changed blocks show a grey “Edited” tag.</p>
     </section>
 
     <section class="sec">
@@ -105,7 +107,7 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stro
         <div class="li"><span class="k">2</span><span>Pick the other block from a searchable outline (visible blocks only).</span></div>
         <div class="li"><span class="k">3</span><span>Ask “How are they different?” for one explanatory block, or write your own.</span></div>
       </div>
-      <p class="t">Shown as an orange inline mention on both ends and a line in the right margin. Opens as a side peek with its own subtopics to explore, ✓ and Edit.</p>
+      <p class="t">Shown as an orange inline mention on both ends and a line in the right margin. Opens as a side peek with its own subtopics to explore and ✓; click its title or text to edit.</p>
     </section>
 
     <section class="sec">

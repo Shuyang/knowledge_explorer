@@ -196,6 +196,27 @@ export function treeOrder(doc: Doc): string[] {
   return [doc.rootId, ...descendants(doc, doc.rootId)];
 }
 
+/**
+ * Outline numbers for the main tree: the root's children are "1", "2", …; their children "1.1",
+ * "1.2", then "1.2.2". Blocks for which `keep` is false (and their subtrees) are skipped and don't
+ * take a number. The root and blocks under side links are not numbered.
+ */
+export function outlineNumbers(doc: Doc, keep: (b: Block) => boolean = () => true): Map<string, string> {
+  const out = new Map<string, string>();
+  const walk = (ids: string[], prefix: string) => {
+    let n = 0;
+    for (const id of ids) {
+      const b = doc.blocks[id];
+      if (!b || !keep(b)) continue;
+      const num = prefix ? `${prefix}.${++n}` : `${++n}`;
+      out.set(id, num);
+      walk(b.childIds, num);
+    }
+  };
+  walk(doc.blocks[doc.rootId]?.childIds ?? [], "");
+  return out;
+}
+
 export function linksOf(doc: Doc, blockId: string): SideLink[] {
   return Object.values(doc.links).filter((l) => l.endpoints.includes(blockId));
 }

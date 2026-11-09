@@ -28,11 +28,12 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stro
 .ck:hover{background:#FFFFFF;color:#141413}
 .pop{position:absolute;z-index:3;width:330px;padding:14px;border-radius:8px;background:#FFFFFF;box-shadow:rgba(15,15,15,0.05) 0 0 0 1px,rgba(15,15,15,0.1) 0 3px 6px,rgba(15,15,15,0.2) 0 9px 24px;display:flex;flex-direction:column;gap:10px;font-size:14px;color:#37352F}
 .gut{position:absolute;left:22px;top:15px;color:#141413}
+.fl{width:max-content;max-width:100%;padding:4px;gap:2px!important;border-radius:10px;background:#FFFFFF;box-shadow:rgba(15,15,15,0.05) 0 0 0 1px,rgba(15,15,15,0.1) 0 3px 6px,rgba(15,15,15,0.12) 0 9px 24px}.fl button{box-shadow:none!important;background:transparent!important;border:0!important;border-radius:6px!important;color:#5F5E5B!important;padding:0 9px!important;min-height:28px;font-size:13px!important}.fl>span{font-size:12px!important;font-weight:500;padding:0 6px 0 8px!important}
 </style>
 </head>
 <body>
 <div style="min-height: 1300px; display: flex; flex-wrap: wrap; position: relative">
-  <nav aria-label="Workspace" style="flex: 1 1 240px; max-width: 260px; background: #F7F7F5; padding: 12px 8px; box-sizing: border-box; display: flex; flex-direction: column; gap: 1px">
+  <nav aria-label="Workspace" style="flex: 0 0 280px; width: 280px; background: #F7F7F5; padding: 12px 8px; box-sizing: border-box; display: flex; flex-direction: column; gap: 1px">
     <div style="display: flex; align-items: center; gap: 8px; padding: 6px 8px 12px; font-size: 14px; font-weight: 600">
       <span aria-hidden="true" style="width: 22px; height: 22px; border-radius: 5px; background: #37352F; color: #FFFFFF; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700">K</span>
       Knowledge Explorer
@@ -40,19 +41,19 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stro
     <a href="01-start.html" class="sb"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>New root topic</a>
     <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px 8px 6px">
       <span style="font-size: 12px; font-weight: 500; color: #73726E">Topics</span>
-      <button class="b" aria-pressed="false" style="min-height: 22px; padding: 0 6px; font-size: 12px; color: #73726E">Hide explored</button>
+      <button class="b" aria-pressed="false" style="min-height: 22px; padding: 0 6px; font-size: 12px; color: #73726E">Hide drafts</button>
     </div>
     <a href="#" class="sb"><svg viewBox="0 0 12 12" aria-hidden="true" style="width: 10px; height: 10px; fill: #8F8E8A; flex: none"><path d="M4 2l5 4-5 4z"></path></svg>Search Interview Preparation</a>
     <a href="#" class="sb" style="font-weight: 500; color: #37352F"><svg viewBox="0 0 12 12" aria-hidden="true" style="width: 10px; height: 10px; fill: #8F8E8A; flex: none"><path d="M2 4l4 5 4-5z"></path></svg>ML Loss Functions</a>
-    <a href="#" class="sb" style="padding-left: 30px">Regression losses</a>
-    <a href="#" class="sb" style="padding-left: 30px">Classification losses</a>
-    <a href="#" class="sb" style="padding-left: 30px">Ranking losses</a>
-    <a href="#" class="sb" style="padding-left: 44px">Pairwise loss</a>
-    <a href="#" class="sb" style="padding-left: 30px">Representation learning losses</a>
-    <a href="#" class="sb" style="padding-left: 44px">Contrastive learning</a>
-    <a href="#" class="sb" style="padding-left: 58px">InfoNCE</a>
-    <a href="#" class="sb" style="padding-left: 72px">Formula</a>
-    <a href="#" class="sb" style="padding-left: 72px; background: #EBEBEA; color: #37352F">Temperature τ</a>
+    <a href="#" class="sb" style="padding-left: 30px"><span style="color: #8F8E8A; font-size: 12px; margin-right: 6px">1</span>Regression losses</a>
+    <a href="#" class="sb" style="padding-left: 30px"><span style="color: #8F8E8A; font-size: 12px; margin-right: 6px">2</span>Classification losses</a>
+    <a href="#" class="sb" style="padding-left: 30px"><span style="color: #8F8E8A; font-size: 12px; margin-right: 6px">3</span>Ranking losses</a>
+    <a href="#" class="sb" style="padding-left: 44px"><span style="color: #8F8E8A; font-size: 12px; margin-right: 6px">3.1</span>Pairwise loss</a>
+    <a href="#" class="sb" style="padding-left: 30px"><span style="color: #8F8E8A; font-size: 12px; margin-right: 6px">4</span>Representation learning losses</a>
+    <a href="#" class="sb" style="padding-left: 44px"><span style="color: #8F8E8A; font-size: 12px; margin-right: 6px">4.1</span>Contrastive learning</a>
+    <a href="#" class="sb" style="padding-left: 58px"><span style="color: #8F8E8A; font-size: 12px; margin-right: 6px">4.1.1</span>InfoNCE</a>
+    <a href="#" class="sb" style="padding-left: 72px"><span style="color: #8F8E8A; font-size: 12px; margin-right: 6px">4.1.1.1</span>Formula</a>
+    <a href="#" class="sb" style="padding-left: 72px; background: #EBEBEA; color: #37352F"><span style="color: #8F8E8A; font-size: 12px; margin-right: 6px">4.1.1.2</span>Temperature τ</a>
     <a href="#" class="sb"><svg viewBox="0 0 12 12" aria-hidden="true" style="width: 10px; height: 10px; fill: #8F8E8A; flex: none"><path d="M4 2l5 4-5 4z"></path></svg>Distributed Systems Basics</a>
   </nav>
 
@@ -60,7 +61,7 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stro
     <header style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 12px; flex-wrap: wrap">
       <span style="font-size: 14px; color: #5F5E5B; padding: 0 4px">ML Loss Functions <span style="color: #9B9A97">/</span> … <span style="color: #9B9A97">/</span> InfoNCE</span>
       <div style="display: flex; align-items: center; gap: 2px">
-        <span style="font-size: 13px; color: #73726E; padding: 0 8px">11 blocks · 3 explored</span>
+        <span style="font-size: 13px; color: #73726E; padding: 0 8px">11 blocks · 3 drafts</span>
         <a href="06-export.html" class="b">Export</a>
         <button class="b" aria-label="More"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button>
       </div>
@@ -68,38 +69,38 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stro
 
     <div style="flex: 1; display: flex; flex-wrap: wrap; align-items: flex-start">
       <main style="flex: 999 1 560px; min-width: 0; padding: 56px 32px 140px; box-sizing: border-box">
-        <article style="max-width: 708px; margin: 0 auto; display: flex; flex-direction: column; gap: 6px; padding: 0 32px; box-sizing: border-box">
+        <article style="max-width: 836px; margin: 0 auto; display: flex; flex-direction: column; gap: 6px; padding: 0 32px; box-sizing: border-box">
           <h1 style="margin: 0 0 8px; font-size: 40px; font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; color: #141413; display: flex; align-items: center; gap: 12px">ML Loss Functions</h1>
           <p class="p" style="color: #141413">A loss function turns “how wrong is the model?” into a number the optimizer can push down.</p>
 
           <div style="display: flex; flex-direction: column; gap: 6px; padding: 28px 32px 32px; border-radius: 6px; margin: 16px -32px 0">
-          <h2 style="margin: 0"><button class="tg h2" aria-expanded="false"><svg viewBox="0 0 12 12" aria-hidden="true" style="width: 12px; height: 12px; fill: #8F8E8A"><path d="M4 2l5 4-5 4z"></path></svg>Regression losses</button></h2>
-          <h2 style="margin: 4px 0 0"><button class="tg h2" aria-expanded="false"><svg viewBox="0 0 12 12" aria-hidden="true" style="width: 12px; height: 12px; fill: #8F8E8A"><path d="M4 2l5 4-5 4z"></path></svg>Classification losses</button></h2>
+          <h2 style="margin: 0"><button class="tg h2" aria-expanded="false"><svg viewBox="0 0 12 12" aria-hidden="true" style="width: 12px; height: 12px; fill: #8F8E8A"><path d="M4 2l5 4-5 4z"></path></svg><span style="color: #8F8E8A; font-weight: 500; margin-right: 0.45em">1</span>Regression losses</button></h2>
+          <h2 style="margin: 4px 0 0"><button class="tg h2" aria-expanded="false"><svg viewBox="0 0 12 12" aria-hidden="true" style="width: 12px; height: 12px; fill: #8F8E8A"><path d="M4 2l5 4-5 4z"></path></svg><span style="color: #8F8E8A; font-weight: 500; margin-right: 0.45em">2</span>Classification losses</button></h2>
 
-          <h2 style="margin: 4px 0 0"><button class="tg h2" aria-expanded="true"><svg viewBox="0 0 12 12" aria-hidden="true" style="width: 12px; height: 12px; fill: #8F8E8A"><path d="M2 4l4 5 4-5z"></path></svg>Ranking losses</button></h2>
-          <div style="padding-left: 18px; display: flex; flex-direction: column; gap: 6px">
+          <h2 style="margin: 4px 0 0"><button class="tg h2" aria-expanded="true"><svg viewBox="0 0 12 12" aria-hidden="true" style="width: 12px; height: 12px; fill: #8F8E8A"><path d="M2 4l4 5 4-5z"></path></svg><span style="color: #8F8E8A; font-weight: 500; margin-right: 0.45em">3</span>Ranking losses</button></h2>
+          <div style="margin-left: 6px; padding-left: 28px; border-left: 1px solid rgba(55,53,47,0.14); display: flex; flex-direction: column; gap: 6px">
             <p class="p">How to learn a relative ordering of items for a query, rather than an absolute score for each item.</p>
-            <h3 class="h3" style="margin-top: 12px">Pairwise loss</h3>
+            <h3 class="h3" style="margin-top: 12px"><span style="color: #8F8E8A; font-weight: 500; margin-right: 0.45em">3.1</span>Pairwise loss</h3>
             <p class="p">Optimizes preferences between pairs: for a query, the more relevant item should score above the less relevant one by some margin.</p>
             <div><a href="04-side-link.html" class="ment"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width: 13px; height: 13px"><path d="M8 3 4 7l4 4"></path><path d="M4 7h16"></path><path d="m16 21 4-4-4-4"></path><path d="M20 17H4"></path></svg>Contrastive learning</a></div>
           </div>
 
-          <h2 style="margin: 18px 0 0"><button class="tg h2" aria-expanded="true"><svg viewBox="0 0 12 12" aria-hidden="true" style="width: 12px; height: 12px; fill: #8F8E8A"><path d="M2 4l4 5 4-5z"></path></svg>Representation learning losses</button></h2>
-          <div style="padding-left: 18px; display: flex; flex-direction: column; gap: 6px">
+          <h2 style="margin: 18px 0 0"><button class="tg h2" aria-expanded="true"><svg viewBox="0 0 12 12" aria-hidden="true" style="width: 12px; height: 12px; fill: #8F8E8A"><path d="M2 4l4 5 4-5z"></path></svg><span style="color: #8F8E8A; font-weight: 500; margin-right: 0.45em">4</span>Representation learning losses</button></h2>
+          <div style="margin-left: 6px; padding-left: 28px; border-left: 1px solid rgba(55,53,47,0.14); display: flex; flex-direction: column; gap: 6px">
             <p class="p">How to shape an embedding space so that similar things land close together and dissimilar things land far apart.</p>
-            <h3 class="h3" style="margin-top: 12px">Contrastive learning</h3>
+            <h3 class="h3" style="margin-top: 12px"><span style="color: #8F8E8A; font-weight: 500; margin-right: 0.45em">4.1</span>Contrastive learning</h3>
             <p class="p">Pulls positive examples closer together in representation space and pushes negatives apart, so distance comes to mean dissimilarity.</p>
             <div><a href="04-side-link.html" class="ment"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width: 13px; height: 13px"><path d="M8 3 4 7l4 4"></path><path d="M4 7h16"></path><path d="m16 21 4-4-4-4"></path><path d="M20 17H4"></path></svg>Pairwise loss</a></div>
 
             <div style="display: flex; flex-direction: column; gap: 6px; background: #F3F6FC; padding: 14px 16px 18px; margin: 14px -16px 0; border-radius: 6px">
-            <h4 class="h4" style="margin: 0; display: flex; align-items: center; gap: 8px">InfoNCE<button class="ck" aria-label="Ink InfoNCE" aria-pressed="false" style="margin-left: auto"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px"><circle cx="12" cy="12" r="10"></circle><path d="m8 12.5 2.5 2.5 5.5-5.5"></path></svg></button></h4>
+            <h4 class="h4" style="margin: 0; display: flex; align-items: center; gap: 8px"><span style="color: #8F8E8A; font-weight: 500; margin-right: 0.45em">4.1.1</span>InfoNCE<button class="ck" aria-label="Ink InfoNCE" aria-pressed="false" style="margin-left: auto"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px"><circle cx="12" cy="12" r="10"></circle><path d="m8 12.5 2.5 2.5 5.5-5.5"></path></svg></button></h4>
             <p class="p">A contrastive objective that frames learning as picking out the one positive example from a set of candidates that are mostly negatives.</p>
 
             <div style="position: relative; margin-top: 16px; padding: 4px 0; display: flex; flex-direction: column; gap: 4px; border-radius: 4px; background: #E9EFFA; box-shadow: 0 0 0 6px #E9EFFA">
-              <div role="toolbar" aria-label="Block actions" style="position: absolute; right: 34px; top: -44px; display: flex; gap: 0; padding: 3px; border-radius: 6px; background: #FFFFFF; box-shadow: rgba(15,15,15,0.05) 0 0 0 1px, rgba(15,15,15,0.1) 0 3px 6px, rgba(15,15,15,0.12) 0 9px 24px"><button class="b" style="min-height: 28px; padding: 0 8px; font-size: 13px">Relate</button><button class="b" style="min-height: 28px; padding: 0 8px; font-size: 13px">Edit</button><button class="b" aria-label="More actions" style="min-height: 28px; padding: 0 6px"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width: 14px; height: 14px"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button></div>
-              <div style="position: absolute; right: -2px; top: 0"><button class="ck" aria-label="Ink this block" aria-pressed="false"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px; color: #141413"><circle cx="12" cy="12" r="10"></circle><path d="m8 12.5 2.5 2.5 5.5-5.5"></path></svg></button></div>
+              
+              <div style="position: absolute; right: -2px; top: 0; display: flex; align-items: center; gap: 2px"><button class="ck" aria-label="Ink this block" aria-pressed="false"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px; color: #141413"><circle cx="12" cy="12" r="10"></circle><path d="m8 12.5 2.5 2.5 5.5-5.5"></path></svg></button><button class="b" aria-label="Actions for Formula" aria-haspopup="menu" style="min-height: 26px; width: 26px; padding: 0; justify-content: center; background: rgba(255,255,255,0.8)"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button></div>
               <div style="display: flex; align-items: center; gap: 8px">
-                <span style="font-size: 14px; font-weight: 600">Formula</span>
+                <span style="font-size: 14px; font-weight: 600"><span style="color: #8F8E8A; font-weight: 500; margin-right: 0.45em">4.1.1.1</span>Formula</span>
                 <span class="pill" style="background: #FFFFFF; color: #5F5E5B">Edited</span>
               </div>
               <div role="math" aria-label="L sub i equals minus log of exp of sim of q i and k i plus over tau, divided by the sum over j of exp of sim of q i and k j over tau" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 18px 8px; font-family: 'Times New Roman', Times, serif; font-style: italic; font-size: 21px; color: #141413; flex-wrap: wrap">
@@ -121,11 +122,11 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stro
 
             <div style="position: relative; margin-top: 26px; display: flex; flex-direction: column; gap: 4px">
               <div style="display: flex; align-items: center; gap: 8px; padding-right: 2px">
-                <h5 class="h4" style="margin: 0; font-size: 16px">Temperature τ</h5>
+                <h5 class="h4" style="margin: 0; font-size: 16px"><span style="color: #8F8E8A; font-weight: 500; margin-right: 0.45em">4.1.1.2</span>Temperature τ</h5>
                 <span class="pill" style="background: #FBF3DB; color: #7A5A00">New</span><button class="ck" aria-label="Ink Temperature τ" aria-pressed="false" style="margin-left: auto"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px"><circle cx="12" cy="12" r="10"></circle><path d="m8 12.5 2.5 2.5 5.5-5.5"></path></svg></button>
               </div>
               <p class="p">Rescales the similarity scores before the softmax. A smaller τ sharpens the distribution, so hard negatives dominate the gradient; a larger τ spreads attention across all negatives.</p>
-              <div role="group" aria-label="Subtopics to explore under Temperature τ" style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 6px"><span style="font-size: 13px; color: #73726E; padding-right: 2px">Explore</span><button class="sub">Why does a small τ favor hard negatives?</button><button class="sub">Typical τ values</button><button class="sub">Learnable τ</button><button class="sub" aria-label="Name your own subtopic" style="padding: 0 8px"><svg class="i" style="width: 14px; height: 14px" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></button></div>
+              <div class="fl" role="group" aria-label="Subtopics to explore under Temperature τ" style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 6px"><span style="font-size: 13px; color: #73726E; padding-right: 2px">Explore</span><button class="sub">Why does a small τ favor hard negatives?</button><button class="sub">Typical τ values</button><button class="sub">Learnable τ</button><button class="sub" aria-label="Name your own subtopic" style="padding: 0 8px"><svg class="i" style="width: 14px; height: 14px" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></button></div>
             </div>
             </div>
           </div>

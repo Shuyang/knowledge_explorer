@@ -40,16 +40,16 @@ a{color:#37352F}a:hover{color:#111111}
 <pre class="md"><span style="font-weight: 600"># ML Loss Functions</span>
 <span class="dim">_Notes · 7 Nov 2026_</span>
 
-## Ranking losses
-### Pairwise loss
+## 1 Ranking losses
+### 1.1 Pairwise loss
 Optimizes preferences between pairs: the more
 relevant item should score above the less relevant one.
 
-## Representation learning losses
-### Contrastive learning
-#### InfoNCE
+## 2 Representation learning losses
+### 2.1 Contrastive learning
+#### 2.1.1 InfoNCE
 
-<span style="font-weight: 600">##### Formula</span>
+<span style="font-weight: 600">##### 2.1.1.1 Formula</span>
 L_i = −log( exp(sim(q_i, k_i⁺)/τ)
            / Σ_j exp(sim(q_i, k_j)/τ) )
 
@@ -60,8 +60,8 @@ q_i is the query embedding, k_i⁺ its positive key…
 <span style="font-weight: 600">## Related concepts</span>
 
 <span style="font-weight: 600">### Pairwise loss ↔ Contrastive learning</span>
-<span class="dim">_Connects [Pairwise loss](#pairwise-loss) and</span>
-<span class="dim">[Contrastive learning](#contrastive-learning)_</span>
+<span class="dim">_Connects [Pairwise loss](#11-pairwise-loss) and</span>
+<span class="dim">[Contrastive learning](#21-contrastive-learning)_</span>
 
 Pairwise ranking losses typically express that one
 candidate should score above another for a query…</pre>
