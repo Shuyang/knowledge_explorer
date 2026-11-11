@@ -4,7 +4,7 @@ import { z } from "zod";
 import type { BlockDraft, OutlineDraft } from "../../shared/model.ts";
 import type { GenContext, Snippet } from "../../shared/context.ts";
 import { AIError, type AIProvider } from "./types.ts";
-import { SYSTEM_PROMPT, blockPrompt, outlinePrompt, relationPrompt, rewritePrompt } from "./prompts.ts";
+import { buildSystemPrompt, blockPrompt, outlinePrompt, relationPrompt, rewritePrompt } from "./prompts.ts";
 
 const BlockZ = z.object({
   title: z.string(),
@@ -26,6 +26,8 @@ export class AnthropicProvider implements AIProvider {
   private client: Anthropic;
 
   constructor(
+    /** Read on every request, so edits to the learner profile apply without a restart. */
+    private profile: () => Promise<string>,
     readonly model = process.env.KE_MODEL ?? "claude-opus-5-5",
     private effort: Effort = (process.env.KE_EFFORT as Effort) ?? "low",
   ) {
@@ -34,6 +36,7 @@ export class AnthropicProvider implements AIProvider {
 
   private async generate<T>(schema: z.ZodType<T>, prompt: string): Promise<T> {
     try {
+      const system = buildSystemPrompt(await this.profile());
       const res = await this.client.beta.messages.parse({
         model: this.model,
         max_tokens: 16000,
@@ -41,7 +44,7 @@ export class AnthropicProvider implements AIProvider {
         betas: ["server-side-fallback-2026-07-01"],
         fallbacks: "default",
         output_config: { effort: this.effort, format: betaZodOutputFormat(schema) },
-        system: SYSTEM_PROMPT,
+        system,
         messages: [{ role: "user", content: prompt }],
       });
       if (res.stop_reason === "refusal") throw new AIError("The model declined this request", false);

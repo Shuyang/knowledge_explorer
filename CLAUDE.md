@@ -12,7 +12,8 @@ A local-first, document-first learning workspace. The source of truth for behavi
 - `server/` is the Express API, bound to 127.0.0.1.
   - `store.ts`: one JSON file per doc in `data/docs/`, written atomically.
   - `cache.ts`: Generated content and background prefetch.
-  - `ai/`: `prompts.ts` (all prompt text, including `LEARNER_PROFILE`), `anthropic.ts`, and `demo.ts`.
+  - `profile.ts`: the learner profile, read from `learner_profile.md` in the data folder.
+  - `ai/`: `prompts.ts` (all prompt text, plus a generic `DEFAULT_LEARNER_PROFILE`), `anthropic.ts`, and `demo.ts`.
 - `src/` is the React 19 UI.
   - `DocPage.tsx` owns document state and every action; saves are debounced by 300ms.
   - `components/Block.tsx` renders the block tree.
@@ -35,7 +36,7 @@ The PRD is the single source of truth for product behaviour; this file doesn't r
 ## Prompts
 
 - `server/ai/prompts.ts` contains everything sent to the model.
-- `LEARNER_PROFILE` holds who the learner is, including their language preferences. Keep the rest of the prompt language-neutral and have it defer to the profile, because the profile will later become a per-user setting.
+- The learner profile (who the learner is, including their language preferences) lives in `<data folder>/learner_profile.md`, not in code. It's re-read on every generation, so edits apply without a restart. The file is created from `DEFAULT_LEARNER_PROFILE` if missing. Keep the rest of the prompt language-neutral and have it defer to the profile.
 - Section bodies are summary tables, and Explore suggestions are the table's rows.
 - Comparisons between two items belong in side links, not in child blocks.
 
