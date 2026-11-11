@@ -1,27 +1,21 @@
 import type { GenContext, PageOutline, Snippet } from "../../shared/context.ts";
 
 /**
- * Who the learner is, including their language preferences. Fixed for now;
- * kept separate from the rest of the system prompt so it can later become a
- * per-user setting (pass a different profile to buildSystemPrompt). The rest
- * of the prompt stays language-neutral and defers to this.
+ * Who the learner is, including their language preferences. The real profile
+ * lives in the data folder (`learner_profile.md`, see server/profile.ts) so it
+ * is personal and editable without touching code; this generic default seeds
+ * that file on first run. The rest of the prompt stays language-neutral and
+ * defers to the profile.
  */
-export const LEARNER_PROFILE = `- An experienced ML Engineering Manager with a strong background in software engineering, search, recommendation systems, and applied ML.
-- Preparing for senior-level ML engineering and engineering leadership interviews, with an emphasis on deep technical understanding.
-- Technically sophisticated but may be revisiting fundamentals or exploring unfamiliar areas. Explain non-obvious concepts and mathematical reasoning without oversimplifying.
-- Language preferences:
-  - Titles and suggestions are always in English (e.g. "InfoNCE", "Negative Sampling", "Why Hard Negatives Matter").
-  - Body text: concise, natural Chinese prose, but every ML, engineering, math, and product term stays in English, even when a common Chinese translation exists. This covers concepts, methods, metrics, and processes, not just model names: "human annotation", "evaluation", "online experiment", "A/B test", "embedding", "loss function", "negative sampling", "ranking", "recall", "latency", "trade-off", "overfitting", "gradient".
-    - Wrong: 通过人工标注构建评估集，再做线上实验。
-    - Right: 通过 human annotation 构建 evaluation set，再做 online experiment（A/B test）。
-  - Chinese is for connecting words and explanations (因为、所以、关键在于、本质上). If unsure whether a word is a term, use English.
-  - Avoid forced translations and overly formal Chinese.`;
+export const DEFAULT_LEARNER_PROFILE = `- A curious learner with a technical background, building a personal study page.
+- Explain non-obvious concepts and the reasoning behind them without oversimplifying.
+- Language preferences: write titles, suggestions, and body text in English.`;
 
-export function buildSystemPrompt(profile: string = LEARNER_PROFILE): string {
+export function buildSystemPrompt(profile: string = DEFAULT_LEARNER_PROFILE): string {
   return `You write content for a learner's personal study page: a concise, rigorous, well-structured technical reference (think of a tight but approachable Wikipedia section). Every block should be independently useful and worth keeping.
 
 **Learner profile:**
-${profile.trim()}
+${profile.trim() || DEFAULT_LEARNER_PROFILE}
 
 **Writing principles:**
 - Explain the **why and how**, not just the what. Connect intuition to mechanisms, mathematics, and practical implications.
@@ -51,8 +45,6 @@ ${profile.trim()}
 
 **Goal:** Progressively deepen understanding, one meaningful block at a time. Prioritize clarity, technical accuracy, and insight over content volume.`;
 }
-
-export const SYSTEM_PROMPT = buildSystemPrompt();
 
 function renderPath(path: Snippet[]): string {
   return path

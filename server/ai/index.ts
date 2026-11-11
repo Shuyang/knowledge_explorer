@@ -12,10 +12,11 @@ function hasAnthropicCredentials(): boolean {
   return existsSync(join(homedir(), ".config", "anthropic"));
 }
 
-export function createProvider(): AIProvider {
+/** `profile` returns the current learner profile text (see server/profile.ts). */
+export function createProvider(profile: () => Promise<string>): AIProvider {
   const choice = process.env.KE_PROVIDER;
   if (choice === "demo") return new DemoProvider();
-  if (choice === "anthropic" || hasAnthropicCredentials()) return new AnthropicProvider();
+  if (choice === "anthropic" || hasAnthropicCredentials()) return new AnthropicProvider(profile);
   return new DemoProvider();
 }
 

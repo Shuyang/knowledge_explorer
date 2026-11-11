@@ -24,10 +24,12 @@ For development with hot reload, run `npm run dev` and open http://localhost:517
 | `KE_PROVIDER` | auto | `anthropic` or `demo`. Without credentials, it falls back to `demo`. |
 | `KE_MODEL` | `claude-opus-5-5` | The Claude model to use. |
 | `KE_EFFORT` | `low` | Effort level (`low` … `max`). Low keeps each block fast and cheap. |
-| `KE_DATA_DIR` | `./data` | Where documents, settings and the prefetch cache live. |
+| `KE_DATA_DIR` | `./data` | Where documents, settings, the learner profile and the prefetch cache live. |
 | `KE_PORT` | `5175` | Server port. The server binds to 127.0.0.1 only. |
 
 **AI:** With credentials, the app calls Claude through the Anthropic SDK, using structured JSON output and server-side refusal fallback (`fallbacks: "default"`). Without credentials, an **offline demo provider** writes clearly labelled placeholder text, so you can try every interaction without network access. Export always works offline.
+
+**Learner profile:** Claude writes for the learner described in `data/learner_profile.md`: who you are, what you're studying, and which languages to use for titles and body text. The server creates the file with a generic English default on first run. Edit it in any text editor; changes apply to the next generation, with no restart needed.
 
 ## How it works
 
