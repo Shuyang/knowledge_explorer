@@ -42,7 +42,7 @@ Never use the tint for emphasis. Inking animates the block off the tint onto the
 
 ## 3. Layout
 
-- **Left sidebar** (`#F7F7F5`, 280 px by default; drag its right edge to resize between 200 and 480 px, double-click the edge to reset, ←/→ when the edge is focused; the width is remembered): app name, "New root topic", **Topics** list; the open topic expands into its outline, each row prefixed with its outline number (`1`, `1.1`, … — same numbers as the page). "Hide drafts" filter. Each topic row has a ⋯ on hover with *Delete topic…* (same confirmation as the top bar's ⋯).
+- **Left sidebar** (`#F7F7F5`, 280 px by default; drag its right edge to resize between 200 and 480 px, double-click the edge to reset, ←/→ when the edge is focused; the width is remembered): app name, "New root topic", **Topics** list; the open topic expands into its outline, each row prefixed with its outline number (`1`, `1.1`, … — same numbers as the page). Clicking the open topic's title collapses its outline (caret turns ▸) and clicking again expands it; opening a topic always shows its outline. "Hide drafts" filter. Each topic row has a ⋯ on hover with *Delete topic…* (same confirmation as the top bar's ⋯).
 - **Top bar**: breadcrumb, counts as `11 blocks · 3 drafts` (drafts left; never count Generated), Export, ⋯.
 - **Reading column**: root title + intro (inked), then sections.
 - **Right margin** (200–260 px): "Relations" list. Side links open in a **side peek** panel (right), never inline.

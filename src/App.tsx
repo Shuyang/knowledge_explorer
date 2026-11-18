@@ -270,6 +270,9 @@ function Sidebar({
 }) {
   const { settings, updateSettings, provider } = useApp();
   const hide = !!settings.hideExplored;
+  // Clicking the open topic's title folds its outline away (and back). Opening a topic shows it again.
+  const [folded, setFolded] = useState(false);
+  useEffect(() => setFolded(false), [activeId]);
 
   const outline = (doc: Doc) => {
     const rows: { id: string; title: string; num: string; depth: number; explored: boolean; writing?: boolean }[] = [];
@@ -323,16 +326,28 @@ function Sidebar({
         {docs?.length === 0 && <div className="sb-foot" style={{ marginTop: 0 }}>No topics yet.</div>}
         {docs?.map((d) => {
           const active = d.id === activeId;
+          const open = active && !folded;
           return (
             <div key={d.id} style={{ display: "contents" }}>
               <div className="sb-row">
-                <a href={`#/doc/${d.id}`} className={`sb ${active ? "active" : ""}`} aria-current={active ? "page" : undefined}>
-                  <Caret open={active} />
+                <a
+                  href={`#/doc/${d.id}`}
+                  className={`sb ${active ? "active" : ""}`}
+                  aria-current={active ? "page" : undefined}
+                  aria-expanded={active ? open : undefined}
+                  title={active ? (open ? "Collapse outline" : "Expand outline") : undefined}
+                  onClick={(e) => {
+                    if (!active) return;
+                    e.preventDefault();
+                    setFolded((f) => !f);
+                  }}
+                >
+                  <Caret open={open} />
                   <span className="lbl">{active && openDoc ? openDoc.blocks[openDoc.rootId].title : d.title}</span>
                 </a>
                 <TopicMenu doc={d} active={active} />
               </div>
-              {active &&
+              {open &&
                 openDoc &&
                 outline(openDoc).map((r) =>
                   r.writing ? (
