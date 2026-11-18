@@ -1,10 +1,14 @@
-import { resolve } from "node:path";
+import { homedir } from "node:os";
+import { join, resolve } from "node:path";
 import { createApp } from "./app.ts";
 import { createProvider } from "./ai/index.ts";
 import { learnerProfile } from "./profile.ts";
 
+const expandHome = (p: string) => (p === "~" || p.startsWith("~/") ? join(homedir(), p.slice(1)) : p);
+
 const port = Number(process.env.KE_PORT ?? 5175);
 const dataDir = resolve(process.env.KE_DATA_DIR ?? "data");
+const markdownDir = process.env.KE_MARKDOWN_DIR ? resolve(expandHome(process.env.KE_MARKDOWN_DIR)) : undefined;
 const profile = await learnerProfile(dataDir);
 const provider = createProvider(profile.read);
 const prod = process.env.NODE_ENV === "production";
@@ -12,6 +16,7 @@ const prod = process.env.NODE_ENV === "production";
 const { app } = await createApp({
   dataDir,
   provider,
+  markdownDir,
   staticDir: prod ? resolve("dist") : undefined,
 });
 
@@ -19,6 +24,7 @@ app.listen(port, "127.0.0.1", () => {
   console.log(`Knowledge Explorer server on http://localhost:${port}${prod ? "" : " (API; open the Vite URL in dev)"}`);
   console.log(`Data folder: ${dataDir}`);
   console.log(`Learner profile: ${profile.path}`);
+  if (markdownDir) console.log(`Markdown mirror: ${markdownDir}`);
   console.log(
     provider.name === "demo"
       ? "AI: offline demo content (set ANTHROPIC_API_KEY to use Claude)"

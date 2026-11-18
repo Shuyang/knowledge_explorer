@@ -7,6 +7,7 @@ import { createDoc, validate } from "../shared/ops.ts";
 import { fromJSON } from "../shared/export.ts";
 import { DocStore } from "./store.ts";
 import { GeneratedCache, type CacheOptions } from "./cache.ts";
+import { MarkdownMirror } from "./mirror.ts";
 import { AIError, type AIProvider } from "./ai/types.ts";
 
 export interface AppOptions {
@@ -18,6 +19,9 @@ export interface AppOptions {
   /** How many suggestions to prepare per section when an outline is created. */
   prefetchPerSection?: number;
   staticDir?: string;
+  /** If set, inked notes are mirrored here as Markdown (one file per topic + README.md). */
+  markdownDir?: string;
+  mirrorDelayMs?: number;
 }
 
 const ID_RE = /^[A-Za-z0-9-]{1,64}$/;
@@ -67,6 +71,8 @@ export async function createApp(opts: AppOptions) {
   const cache = new GeneratedCache(opts.dataDir, opts.cache);
   await store.init();
   await cache.init();
+  const mirror = opts.markdownDir ? new MarkdownMirror(opts.markdownDir, store, opts.mirrorDelayMs) : undefined;
+  mirror?.schedule();
   const ai = opts.provider;
   const perBlock = opts.prefetchPerBlock ?? 2;
   const perSection = opts.prefetchPerSection ?? 1;
@@ -119,6 +125,7 @@ export async function createApp(opts: AppOptions) {
       if (!outline.sections?.length) throw new AIError("The outline came back empty");
       const doc = createDoc({ ...outline, title: outline.title?.trim() || topic, sections: outline.sections.slice(0, 8) });
       await store.put(doc);
+      mirror?.schedule();
       for (const sid of doc.blocks[doc.rootId].childIds) {
         const b = doc.blocks[sid];
         const c = contextFor(doc, sid);
@@ -138,6 +145,7 @@ export async function createApp(opts: AppOptions) {
         throw new HttpError(400, (e as Error).message);
       }
       await store.put(doc);
+      mirror?.schedule();
       res.status(201).json(doc);
     }),
   );
@@ -160,6 +168,7 @@ export async function createApp(opts: AppOptions) {
       const errs = validate(doc);
       if (errs.length) throw new HttpError(422, `Refusing to save an inconsistent document: ${errs[0]}`);
       await store.put(doc);
+      mirror?.schedule();
       res.json({ ok: true, updatedAt: doc.updatedAt });
     }),
   );
@@ -169,6 +178,7 @@ export async function createApp(opts: AppOptions) {
     wrap(async (req, res) => {
       const docId = id(req.params.id, "id");
       await store.delete(docId);
+      mirror?.schedule();
       await cache.clearDoc(docId);
       res.json({ ok: true });
     }),
@@ -253,5 +263,5 @@ export async function createApp(opts: AppOptions) {
     res.status(500).json({ error: "Something went wrong on this device's server" });
   });
 
-  return { app, store, cache };
+  return { app, store, cache, mirror };
 }
