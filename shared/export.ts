@@ -13,6 +13,12 @@ export interface MarkdownOptions {
   scope: ExportScope;
   relationsAtEnd: boolean;
   latex: boolean;
+  /**
+   * Write math in GitHub's own syntax ($`…`$ inline, a ```math fence for display),
+   * which GitHub doesn't run Markdown escapes over. Plain $…$ breaks there:
+   * `\#`, `\{`, `\_`, `\\` … lose their backslash before the math is rendered.
+   */
+  githubMath?: boolean;
 }
 
 const included = (scope: ExportScope, item: { lifecycle: string }) => scope === "all" || item.lifecycle === "inked";
@@ -135,12 +141,30 @@ export function slug(s: string): string {
     .replace(/\s+/g, "-");
 }
 
-/** Optionally converts $…$ math into code so it reads in plain Markdown viewers. */
-function mathOut(body: string, latex: boolean): string {
-  if (latex) return body;
+const DISPLAY_RE = /\$\$([\s\S]+?)\$\$/g;
+const INLINE_RE = /(^|[^\\$])\$([^\s$](?:[^$\n]*?[^\s$])?)\$/g;
+
+/** Rewrites $…$ math for the target: kept (latex), GitHub syntax, or code (plain viewers). */
+function mathOut(body: string, opts: MarkdownOptions): string {
+  if (opts.githubMath) return githubMath(body);
+  if (opts.latex) return body;
   return body
-    .replace(/\$\$([\s\S]+?)\$\$/g, (_m, tex: string) => "```\n" + tex.trim() + "\n```")
-    .replace(/(^|[^\\$])\$([^\s$](?:[^$\n]*?[^\s$])?)\$/g, (_m, pre: string, tex: string) => `${pre}\`${tex}\``);
+    .replace(DISPLAY_RE, (_m, tex: string) => "```\n" + tex.trim() + "\n```")
+    .replace(INLINE_RE, (_m, pre: string, tex: string) => `${pre}\`${tex}\``);
+}
+
+function githubMath(body: string): string {
+  // Display math on its own line(s) becomes a ```math fence (kept at the line's indent, so it stays inside lists).
+  // Display math mid-line can't be a fence; it becomes inline math.
+  const fenced = body.replace(/^([ \t]*(?:[-*+] |\d+\. )?)\$\$([\s\S]+?)\$\$[ \t]*$/gm, (m, lead: string, tex: string) => {
+    if (tex.includes("```")) return m;
+    const indent = " ".repeat(lead.length);
+    const lines = tex.trim().split("\n").map((l) => indent + l.trim());
+    return `${lead}\`\`\`math\n${lines.join("\n")}\n${indent}\`\`\``;
+  });
+  return fenced
+    .replace(DISPLAY_RE, (m, tex: string) => (tex.includes("`") ? m : `$\`${tex.trim()}\`$`))
+    .replace(INLINE_RE, (m, pre: string, tex: string) => (tex.includes("`") ? m : `${pre}$\`${tex}\`$`));
 }
 
 export function toMarkdown(doc: Doc, opts: MarkdownOptions, now = new Date()): string {
@@ -167,7 +191,7 @@ export function toMarkdown(doc: Doc, opts: MarkdownOptions, now = new Date()): s
     const [ha, hb] = l.endpoints.map(heading);
     out.push(`_Connects [${a}](#${slug(ha)}) and [${b}](#${slug(hb)})_`, "");
     if (l.title && l.title !== linkTitle(l)) out.push(`**${l.title}**`, "");
-    if (l.body) out.push(mathOut(l.body, opts.latex), "");
+    if (l.body) out.push(mathOut(l.body, opts), "");
     for (const ch of l.childIds) writeBlock(ch, level + 1);
   };
 
@@ -176,7 +200,7 @@ export function toMarkdown(doc: Doc, opts: MarkdownOptions, now = new Date()): s
     const b = doc.blocks[id];
     if (!b || !included(opts.scope, b)) return;
     out.push(h(level, heading(id)) + draftMark(b), "");
-    if (b.body) out.push(mathOut(b.body, opts.latex), "");
+    if (b.body) out.push(mathOut(b.body, opts), "");
     for (const ch of b.childIds) writeBlock(ch, level + 1);
     if (!opts.relationsAtEnd) {
       for (const l of linksToWrite) {
@@ -191,7 +215,7 @@ export function toMarkdown(doc: Doc, opts: MarkdownOptions, now = new Date()): s
   out.push(h(1, root.title), "");
   const date = now.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
   out.push(`_${opts.scope === "inked" ? "Notes" : "Whole topic"} · ${date}_`, "");
-  if (root.body) out.push(mathOut(root.body, opts.latex), "");
+  if (root.body) out.push(mathOut(root.body, opts), "");
   for (const ch of root.childIds) writeBlock(ch, 2);
 
   const remaining = linksToWrite.filter((l) => !writtenInline.has(l.id));

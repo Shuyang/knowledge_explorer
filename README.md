@@ -25,11 +25,24 @@ For development with hot reload, run `npm run dev` and open http://localhost:517
 | `KE_MODEL` | `claude-opus-5-5` | The Claude model to use. |
 | `KE_EFFORT` | `low` | Effort level (`low` … `max`). Low keeps each block fast and cheap. |
 | `KE_DATA_DIR` | `./data` | Where documents, settings, the learner profile and the prefetch cache live. |
+| `KE_MARKDOWN_DIR` | – | Optional. Keeps a Markdown copy of your inked notes in this folder (see below). |
 | `KE_PORT` | `5175` | Server port. The server binds to 127.0.0.1 only. |
 
 **AI:** With credentials, the app calls Claude through the Anthropic SDK, using structured JSON output and server-side refusal fallback (`fallbacks: "default"`). Without credentials, an **offline demo provider** writes clearly labelled placeholder text, so you can try every interaction without network access. Export always works offline.
 
 **Learner profile:** Claude writes for the learner described in `data/learner_profile.md`: who you are, what you're studying, and which languages to use for titles and body text. The server creates the file with a generic English default on first run. Edit it in any text editor; changes apply to the next generation, with no restart needed.
+
+**Publishing notes (Markdown mirror):** Set `KE_MARKDOWN_DIR` to a folder, typically a clone of a separate GitHub repo, and the server keeps it in sync with your notes:
+
+- One file per topic (`learning-to-rank.md`), with only inked blocks and relations. Drafts and draft-only topics are left out. Math is written in GitHub's own syntax (`` $`…`$ `` and ` ```math ` blocks), so LaTeX like `\#` or `\{…\}` renders correctly there. GitHub also renders the tables and heading links.
+- A `README.md` index that links every topic, so the repo's front page lists your notes.
+- Files update about a second after each save. Deleting or renaming a topic removes or renames its file. A file's date only changes when its inked content does.
+- The server only writes files. You commit and push when you choose, e.g. `git -C <folder> add -A && git -C <folder> commit -m "Update notes" && git -C <folder> push`.
+- The server only changes files it created, which it records in `.knowledge-explorer.json`. If the folder already has its own `README.md`, the server leaves it alone.
+
+```bash
+KE_MARKDOWN_DIR=~/notes npm run dev
+```
 
 ## How it works
 

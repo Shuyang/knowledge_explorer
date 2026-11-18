@@ -168,6 +168,7 @@ Design decisions such as inline vs. modal editing, deletion affordances, how ink
 - A Markdown export can use sensible linearization for side links (e.g., a referenced relationship section); it need not perfectly preserve interactive features. The structured export should preserve relationships.
 - Future Notion export/sync should be possible through an adapter. **Do not implement Notion integration in MVP**, and do not couple the core model to Notion page/block schemas.
 - Export should work without internet access, even if AI generation requires network access.
+- Optional **Markdown mirror**: when a folder is configured, the inked notes are kept in sync there automatically (one file per topic plus an index), so they can be published, e.g. from a git repo. Drafts are never mirrored, and committing/publishing stays manual.
 
 ## 9. Future extension: review and interview preparation
 

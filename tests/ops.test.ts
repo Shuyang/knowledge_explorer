@@ -230,4 +230,28 @@ describe("export (AC13)", () => {
     expect(plain).toContain("##### 3.1.1.2 Temperature τ");
     expect(plain).not.toContain("$$");
   });
+
+  it("Markdown can use GitHub math syntax, which survives \\# and other escapes", () => {
+    const { doc, rank } = lossDoc();
+    const body = [
+      "Memory is $O(\\#\\text{nodes}\\cdot K)$ and $\\{a, b\\}$.",
+      "",
+      "$$",
+      "\\mathcal{L} = -\\log \\sigma(s_i - s_j)",
+      "$$",
+      "",
+      "- $$x_1 + x_2$$",
+      "",
+      "Mid-line $$y$$ display, and a code span `$PATH` stays put.",
+    ].join("\n");
+    const d = ink(editContent(doc, rank, { title: "Ranking losses", body }), [rank]);
+    const md = toMarkdown(d, { scope: "inked", relationsAtEnd: true, latex: true, githubMath: true });
+    expect(md).toContain("Memory is $`O(\\#\\text{nodes}\\cdot K)`$ and $`\\{a, b\\}`$.");
+    expect(md).toContain("```math\n\\mathcal{L} = -\\log \\sigma(s_i - s_j)\n```");
+    expect(md).toContain("- ```math\n  x_1 + x_2\n  ```");
+    expect(md).toContain("Mid-line $`y`$ display");
+    expect(md).not.toMatch(/(^|[^`])\$\$/m);
+    // The download export keeps standard $…$ for other Markdown tools.
+    expect(toMarkdown(d, { scope: "inked", relationsAtEnd: true, latex: true })).toContain("$O(\\#\\text{nodes}\\cdot K)$");
+  });
 });

@@ -12,6 +12,7 @@ A local-first, document-first learning workspace. The source of truth for behavi
 - `server/` is the Express API, bound to 127.0.0.1.
   - `store.ts`: one JSON file per doc in `data/docs/`, written atomically.
   - `cache.ts`: Generated content and background prefetch.
+  - `mirror.ts`: optional Markdown mirror of the inked notes (`KE_MARKDOWN_DIR`).
   - `profile.ts`: the learner profile, read from `learner_profile.md` in the data folder.
   - `ai/`: `prompts.ts` (all prompt text, plus a generic `DEFAULT_LEARNER_PROFILE`), `anthropic.ts`, and `demo.ts`.
 - `src/` is the React 19 UI.
@@ -48,6 +49,7 @@ The PRD is the single source of truth for product behaviour; this file doesn't r
   - `KE_PROVIDER=demo` uses offline placeholder content, so no API key is needed.
   - `KE_DATA_DIR` sets the data folder.
   - `KE_PORT` sets the API port; Vite's proxy follows it.
+  - `KE_MARKDOWN_DIR` turns on the Markdown mirror into that folder.
   - `KE_MODEL` and `KE_EFFORT` set the Claude model and effort level.
 
 ## Test instance
